@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-cover bg-center;
+  background-image: url('/uterus-bg.gif');
+}
+
+/* Custom styles removed to allow Tailwind defaults to apply */
