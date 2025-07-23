@@ -35,29 +35,29 @@ function App() {
 
   if (!user) {
     // Not authenticated: show login/register
-    return (
-      <Routes>
-        <Route path="/register" element={<Register />} />
+  return (
+    <Routes>
+      <Route path="/register" element={<Register />} />
         <Route path="/*" element={<Login />} />
-      </Routes>
+              </Routes>
     );
   }
 
   // Authenticated: route based on role
   if (user.role === 'Admin') {
     return (
-      <DefaultLayout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/risk-assessment" element={<RiskAssessment />} />
-          <Route path="/screening-planner" element={<ScreeningPlanner />} />
-          <Route path="/inventory" element={<InventoryStatus />} />
-          <Route path="/cost-estimator" element={<CostEstimator />} />
-          <Route path="/reports" element={<ReportsTrends />} />
-          <Route path="/patients" element={<PatientRecord />} />
-        </Routes>
-      </DefaultLayout>
+            <DefaultLayout>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/risk-assessment" element={<RiskAssessment />} />
+                <Route path="/screening-planner" element={<ScreeningPlanner />} />
+                <Route path="/inventory" element={<InventoryStatus />} />
+                <Route path="/cost-estimator" element={<CostEstimator />} />
+                <Route path="/reports" element={<ReportsTrends />} />
+                <Route path="/patients" element={<PatientRecord />} />
+              </Routes>
+            </DefaultLayout>
     );
   } else {
     return (
@@ -67,9 +67,9 @@ function App() {
           <Route path="/patient/cost" element={<PatientCost />} />
           <Route path="/patient/profile" element={<PatientProfile />} />
           <Route path="*" element={<Navigate to="/patient/risk" replace />} />
-        </Routes>
+    </Routes>
       </PatientLayout>
-    );
+  );
   }
 }
 

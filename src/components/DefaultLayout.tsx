@@ -102,15 +102,36 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             {!collapsed && <span>Patient Portal</span>}
           </Link>
         </nav>
-        <div className={`p-4 border-t flex items-center gap-2 ${collapsed ? "justify-center" : ""}`}>
-          <div className="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center font-bold text-pink-600">
-            {/* REMOVE USER INFO DISPLAY */}
-          </div>
-          {!collapsed && (
-            <div>
-              {/* REMOVE USER INFO DISPLAY */}
+        <div className={`absolute bottom-0 left-0 right-0 p-6 border-t`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
+                <span className="text-sm font-medium text-pink-600">
+                  {/* Assuming user state is managed elsewhere or removed */}
+                  U
+                </span>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900">
+                  {/* Assuming user state is managed elsewhere or removed */}
+                  User Name
+                </p>
+                <p className="text-xs text-gray-500">
+                  {/* Assuming user state is managed elsewhere or removed */}
+                  Role
+                </p>
+              </div>
             </div>
-          )}
+            <button
+              onClick={handleLogout}
+              className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg"
+              title="Logout"
+            >
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          </div>
         </div>
       </aside>
       {/* Main content: add md:ml-16 or md:ml-64 for desktop */}
