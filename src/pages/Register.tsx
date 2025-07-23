@@ -10,7 +10,6 @@ const Register = () => {
   const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
   
-  const navigate = useNavigate();
   // REMOVE ALL REDUX HOOKS, THUNKS, AND AUTH LOGIC
   // Remove all references to registerUser, registerResult, loginUser, loginResult, error, and loading
   // Use local state for form fields and navigation only

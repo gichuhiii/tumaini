@@ -14,7 +14,6 @@ import PatientLayout from "./components/PatientLayout";
 import PatientRisk from "./pages/PatientRisk";
 import PatientCost from "./pages/PatientCost";
 import PatientProfile from "./pages/PatientProfile";
-import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   // Local state to track mock authentication

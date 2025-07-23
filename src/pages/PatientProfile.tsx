@@ -1,5 +1,3 @@
-import React from "react";
-
 const PatientProfile = () => {
   // REMOVE ALL REDUX HOOKS AND AUTH LOGIC
   

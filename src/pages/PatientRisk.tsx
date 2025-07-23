@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 
 interface RiskAssessmentData {
   age: string;

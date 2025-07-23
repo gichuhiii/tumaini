@@ -9,7 +9,6 @@ const Login = () => {
   const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
   
-  const navigate = useNavigate();
   // REMOVE ALL REDUX HOOKS, THUNKS, AND AUTH LOGIC
 
   useEffect(() => {
@@ -21,7 +20,7 @@ const Login = () => {
     //     navigate("/patient/risk");
     //   }
     // }
-  }, [navigate]); // Removed isAuthenticated and user from dependency array
+  }, []); // Removed isAuthenticated and user from dependency array
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

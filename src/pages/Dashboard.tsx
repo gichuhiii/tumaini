@@ -1,4 +1,3 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useScrollFadeIn } from "../lib/useScrollFadeIn";
@@ -18,7 +17,6 @@ const recentAssessments = [
 ];
 
 const Dashboard = () => {
-  const fadeInCard = useScrollFadeIn();
   return (
     <div>
       <h3 className="text-3xl font-bold mb-2">Welcome back, Dr. Johnson</h3>
