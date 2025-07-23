@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
@@ -32,7 +31,6 @@ function getPageName(pathname: string) {
 }
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
-  const { user, role, logout } = useContext(AuthContext);
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -41,6 +39,12 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   // Close sidebar on overlay click (mobile)
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) setSidebarOpen(false);
+  };
+
+  // Add a logout button that clears 'mockUser' from localStorage and reloads the page
+  const handleLogout = () => {
+    localStorage.removeItem('mockUser');
+    window.location.replace('/');
   };
 
   // Sidebar width
@@ -74,7 +78,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
         </div>
         <div className="border-b w-full" />
         <nav className="flex-1 py-6 space-y-1 flex flex-col">
-          {role === "Admin" && navItems.map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             const active = location.pathname.startsWith(item.path);
             return (
@@ -89,33 +93,30 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             );
           })}
-          {role === "Patient" && (
-            <Link
-              to="/patient-portal"
-              className={navItemClass(location.pathname === "/patient-portal")}
-              onClick={() => setSidebarOpen(false)}
-            >
-              <Calculator className={iconClass} />
-              {!collapsed && <span>Patient Portal</span>}
-            </Link>
-          )}
+          <Link
+            to="/patient-portal"
+            className={navItemClass(location.pathname === "/patient-portal")}
+            onClick={() => setSidebarOpen(false)}
+          >
+            <Calculator className={iconClass} />
+            {!collapsed && <span>Patient Portal</span>}
+          </Link>
         </nav>
         <div className={`p-4 border-t flex items-center gap-2 ${collapsed ? "justify-center" : ""}`}>
           <div className="h-10 w-10 rounded-full bg-pink-100 flex items-center justify-center font-bold text-pink-600">
-            {user ? user[0]?.toUpperCase() : "?"}
+            {/* REMOVE USER INFO DISPLAY */}
           </div>
           {!collapsed && (
             <div>
-              <div className="font-semibold text-sm">{user || "Guest"}</div>
-              <div className="text-xs text-gray-400">{role || "Role"}</div>
+              {/* REMOVE USER INFO DISPLAY */}
             </div>
           )}
         </div>
       </aside>
       {/* Main content: add md:ml-16 or md:ml-64 for desktop */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ${mainMargin}`}>
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ${mainMargin}`} style={{ marginLeft: collapsed ? '4rem' : '16rem' }}>
         {/* Top bar always visible */}
-        <header className="flex items-center h-20 px-4 bg-white border-b shadow-sm" style={{ borderBottomWidth: 1 }}>
+        <header className="fixed top-0 left-0 right-0 flex items-center h-20 px-4 bg-white border-b shadow-sm z-40" style={{ marginLeft: collapsed ? '4rem' : '16rem', height: '5rem' }}>
           {/* Hamburger always visible */}
           <Button variant="ghost" size="icon" onClick={() => setCollapsed((c) => !c)}>
             <span className="sr-only">Toggle sidebar</span>
@@ -132,19 +133,13 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 top-12 bg-white border rounded shadow-lg py-2 w-56 z-50">
-                <div className="px-4 py-2 text-gray-700 text-sm border-b max-w-[200px] truncate overflow-hidden whitespace-nowrap">{user}</div>
-                <button
-                  className="w-full text-left px-4 py-2 text-pink-600 hover:bg-pink-50 text-sm"
-                  onClick={logout}
-                >
-                  Logout
-                </button>
+                {/* REMOVE USER INFO DISPLAY */}
               </div>
             )}
           </div>
         </header>
         {/* Main content area with reduced whitespace */}
-        <main key={location.pathname} className="flex-1 p-2 md:p-6 lg:p-8 max-w-full animate-fade-in">{children}</main>
+        <main key={location.pathname} className="flex-1 p-2 md:p-6 lg:p-8 max-w-full animate-fade-in" style={{ marginTop: '5rem' }}>{children}</main>
       </div>
     </div>
   );
