@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import DefaultLayout from "@/components/DefaultLayout";
 import Login from "./pages/Login";
@@ -14,6 +13,7 @@ import PatientLayout from "./components/PatientLayout";
 import PatientRisk from "./pages/PatientRisk";
 import PatientCost from "./pages/PatientCost";
 import PatientProfile from "./pages/PatientProfile";
+import { useState, useEffect } from 'react';
 
 function App() {
   // Local state to track mock authentication

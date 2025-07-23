@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useScrollFadeIn } from "../lib/useScrollFadeIn";
 
 const stats = [
   { label: "Total Assessments", value: 247, change: "+12% from last month" },

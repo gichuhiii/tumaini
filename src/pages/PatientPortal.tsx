@@ -1,4 +1,5 @@
 import CostEstimator from "./CostEstimator";
+import { useState } from 'react';
 
 const PatientPortal = () => {
   const [age, setAge] = useState("");
