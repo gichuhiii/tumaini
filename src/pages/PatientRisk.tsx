@@ -142,67 +142,68 @@ const PatientRisk = () => {
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
         {/* Patient Form */}
-        <form className="bg-white rounded-lg border p-6 space-y-4 card-animate" onSubmit={handleSubmit}>
+        <form className="bg-white rounded-lg border p-4 lg:p-6 space-y-4 card-animate" onSubmit={handleSubmit}>
           <h2 className="font-semibold text-pink-600 text-lg mb-1 flex items-center">&#9888; Your Information</h2>
           <p className="text-gray-500 text-sm mb-4">Enter your details for a personalized risk assessment</p>
           
           {apiError && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded text-sm">
               {apiError}
             </div>
           )}
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Age</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Age *</label>
               <input 
                 name="age" 
                 value={form.age} 
                 onChange={handleChange} 
                 type="number" 
-                className={`w-full border rounded px-3 py-2 input-animate ${errors.age ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 input-animate text-sm ${errors.age ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
                 min="18"
                 max="100"
+                placeholder="Enter your age"
               />
               {errors.age && <div className="text-xs text-red-500 mt-1">{errors.age}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Number of Sexual Partners <span className="text-gray-400">(optional)</span></label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Number of Sexual Partners <span className="text-gray-400">(optional)</span></label>
               <input 
                 name="partners" 
                 value={form.partners} 
                 onChange={handleChange} 
                 type="number" 
-                className={`w-full border rounded px-3 py-2 input-animate ${errors.partners ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 input-animate text-sm ${errors.partners ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
                 min="0"
                 placeholder="Leave blank if N/A"
               />
               {errors.partners && <div className="text-xs text-red-500 mt-1">{errors.partners}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">First Sexual Activity Age <span className="text-gray-400">(optional)</span></label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">First Sexual Activity Age <span className="text-gray-400">(optional)</span></label>
               <input 
                 name="firstSex" 
                 value={form.firstSex} 
                 onChange={handleChange} 
                 type="number" 
-                className={`w-full border rounded px-3 py-2 input-animate ${errors.firstSex ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 input-animate text-sm ${errors.firstSex ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
                 min="0"
                 placeholder="Leave blank if N/A"
               />
               {errors.firstSex && <div className="text-xs text-red-500 mt-1">{errors.firstSex}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">HPV Test Result</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">HPV Test Result *</label>
               <select 
                 name="hpv" 
                 value={form.hpv} 
                 onChange={handleChange} 
-                className={`w-full border rounded px-3 py-2 ${errors.hpv ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.hpv ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
+                <option value="">Select HPV Test Result</option>
                 <option value="Positive">Positive</option>
                 <option value="Negative">Negative</option>
                 <option value="Unknown">Unknown</option>
@@ -210,14 +211,14 @@ const PatientRisk = () => {
               {errors.hpv && <div className="text-xs text-red-500 mt-1">{errors.hpv}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Pap Smear Result</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Pap Smear Result *</label>
               <select
                 name="pap"
                 value={form.pap}
                 onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.pap ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.pap ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
+                <option value="">Select Pap Smear Result</option>
                 {YES_NO_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
@@ -225,14 +226,14 @@ const PatientRisk = () => {
               {errors.pap && <div className="text-xs text-red-500 mt-1">{errors.pap}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Smoking Status</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Smoking Status *</label>
               <select
                 name="smoking"
                 value={form.smoking}
                 onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.smoking ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.smoking ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
+                <option value="">Select Smoking Status</option>
                 {YES_NO_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
@@ -240,14 +241,14 @@ const PatientRisk = () => {
               {errors.smoking && <div className="text-xs text-red-500 mt-1">{errors.smoking}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">STDs History</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">STD History *</label>
               <select
                 name="stds"
                 value={form.stds}
                 onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.stds ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.stds ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
+                <option value="">Select STD History</option>
                 {YES_NO_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
@@ -255,100 +256,127 @@ const PatientRisk = () => {
               {errors.stds && <div className="text-xs text-red-500 mt-1">{errors.stds}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Region</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Region *</label>
               <select
                 name="region"
                 value={form.region}
                 onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.region ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.region ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
-                {REGION_OPTIONS.map(region => (
-                  <option key={region} value={region}>{region.charAt(0).toUpperCase() + region.slice(1)}</option>
-                ))}
+                <option value="">Select Region</option>
+                <option value="Nairobi">Nairobi</option>
+                <option value="Mombasa">Mombasa</option>
+                <option value="Kisumu">Kisumu</option>
+                <option value="Nakuru">Nakuru</option>
+                <option value="Eldoret">Eldoret</option>
+                <option value="Other">Other</option>
               </select>
               {errors.region && <div className="text-xs text-red-500 mt-1">{errors.region}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Last Screening Type</label>
-              <select
-                name="screening"
-                value={form.screening}
-                onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.screening ? 'border-red-500' : ''}`}
-              >
-                <option value="">Select</option>
-                {SCREENING_TYPE_OPTIONS.map(type => (
-                  <option key={type} value={type}>{type.toUpperCase()}</option>
-                ))}
-              </select>
-              {errors.screening && <div className="text-xs text-red-500 mt-1">{errors.screening}</div>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Insurance Covered</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Insurance Coverage *</label>
               <select
                 name="insurance"
                 value={form.insurance}
                 onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${errors.insurance ? 'border-red-500' : ''}`}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.insurance ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select</option>
+                <option value="">Select Insurance Status</option>
                 {YES_NO_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
               {errors.insurance && <div className="text-xs text-red-500 mt-1">{errors.insurance}</div>}
             </div>
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium mb-2 text-gray-700">Previous Screening *</label>
+              <select
+                name="screening"
+                value={form.screening}
+                onChange={handleChange}
+                className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.screening ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
+              >
+                <option value="">Select Previous Screening</option>
+                {YES_NO_OPTIONS.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+              {errors.screening && <div className="text-xs text-red-500 mt-1">{errors.screening}</div>}
+            </div>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full bg-pink-500 hover:bg-pink-600 text-white mt-4 btn-animate"
+          
+          <button
+            type="submit"
             disabled={loading}
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm"
           >
-            {loading ? "Assessing..." : "Assess My Risk"}
-          </Button>
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Assessing Risk...
+              </div>
+            ) : (
+              "Assess My Risk"
+            )}
+          </button>
         </form>
-        
-        {/* Results Panel */}
-        {result && !loading && (
-          <div className="bg-white rounded-lg border p-6 flex flex-col card-animate">
-            <h2 className="font-semibold text-pink-600 text-lg mb-2 flex items-center">&#9888; Your Risk Assessment</h2>
-            <div className={`mb-2 p-2 rounded font-semibold ${getRiskLevelColor(result.risk_level)}`}>
-              Risk Level: {result.risk_level}
+
+        {/* Results Section */}
+        <div className="bg-white rounded-lg border p-4 lg:p-6 card-animate">
+          <h2 className="font-semibold text-pink-600 text-lg mb-4 flex items-center">📊 Risk Assessment Results</h2>
+          
+          {!result && !loading && (
+            <div className="text-center py-8">
+              <div className="text-gray-400 text-6xl mb-4">📋</div>
+              <p className="text-gray-500 text-sm">Fill out the form to get your personalized risk assessment</p>
             </div>
-            <div className="mb-2">
-              <div className="font-semibold mb-1">Contributing Risk Factors:</div>
-              <ul className="list-disc ml-6 text-sm text-gray-700">
-                {result.factors.map((factor: string, i: number) => (
-                  <li key={i}>{factor}</li>
-                ))}
-              </ul>
+          )}
+          
+          {loading && (
+            <div className="text-center py-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+              <p className="text-gray-500 text-sm">Analyzing your risk factors...</p>
             </div>
-            <div className="mb-2">
-              <div className="font-semibold mb-1">Recommended Actions:</div>
-              <ul className="list-disc ml-6 text-sm text-gray-700">
-                {result.recommendations.map((rec: string, i: number) => (
-                  <li key={i}>{rec}</li>
-                ))}
-              </ul>
+          )}
+          
+          {result && (
+            <div className="space-y-4">
+              <div className="text-center p-4 rounded-lg bg-gray-50">
+                <div className="text-2xl font-bold mb-2">Risk Level: <span className={getRiskLevelColor(result.risk_level)}>{result.risk_level}</span></div>
+                <div className="text-sm text-gray-600">Risk Score: {result.risk_score}/100</div>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm">Key Risk Factors:</h3>
+                <ul className="space-y-1">
+                  {result.factors.map((factor, index) => (
+                    <li key={index} className="text-sm text-gray-600 flex items-start">
+                      <span className="text-red-500 mr-2">•</span>
+                      {factor}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2 text-sm">Recommendations:</h3>
+                <ul className="space-y-1">
+                  {result.recommendations.map((rec, index) => (
+                    <li key={index} className="text-sm text-gray-600 flex items-start">
+                      <span className="text-green-500 mr-2">✓</span>
+                      {rec}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <div className="text-sm font-medium text-blue-900 mb-1">Next Screening Date:</div>
+                <div className="text-sm text-blue-700">{result.next_screening_date}</div>
+              </div>
             </div>
-            <div className="mb-4 p-2 rounded bg-blue-50 text-blue-700 font-medium">
-              Next Screening: {result.next_screening_date}
-            </div>
-          </div>
-        )}
-        
-        {loading && (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <svg className="animate-spin h-8 w-8 text-pink-500 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-              </svg>
-              <p className="text-gray-600">Analyzing your risk factors...</p>
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

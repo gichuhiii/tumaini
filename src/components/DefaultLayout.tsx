@@ -10,8 +10,9 @@ import {
   Users,
   Menu,
   User as UserIcon,
+  X,
 } from "lucide-react";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { toast } from "sonner";
 
 const navItems = [
@@ -37,6 +38,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Get user data from localStorage
@@ -50,6 +52,20 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) setSidebarOpen(false);
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Logout functionality
   const handleLogout = () => {
@@ -82,20 +98,35 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 transition-opacity md:hidden"
+          className="fixed inset-0 z-40 bg-black/40 transition-opacity lg:hidden"
           onClick={handleOverlayClick}
         />
       )}
+      
       {/* Sidebar */}
       <aside
-        className={`sidebar-animate fixed z-50 inset-y-0 left-0 ${sidebarWidth} bg-white flex flex-col transition-all duration-200 border-r
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+        className={`sidebar-animate fixed z-50 inset-y-0 left-0 ${sidebarWidth} bg-white flex flex-col transition-all duration-200 border-r shadow-lg
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
       >
-        <div className="h-20 flex items-center justify-center">
-          <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className={`h-32 transition-all duration-200 ${collapsed ? "hidden" : "block"}`} />
+        {/* Sidebar Header */}
+        <div className="h-16 lg:h-20 flex items-center justify-between px-4 lg:px-6 border-b">
+          <div className="flex items-center">
+            <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className={`h-8 lg:h-10 transition-all duration-200 ${collapsed ? "hidden" : "block"}`} />
+            {!collapsed && (
+              <span className="ml-3 text-lg lg:text-xl font-bold text-pink-600">Tumaini</span>
+            )}
+          </div>
+          {/* Close button for mobile */}
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
-        <div className="border-b w-full" />
-        <nav className="flex-1 py-6 space-y-1 flex flex-col">
+        
+        {/* Navigation */}
+        <nav className="flex-1 py-4 lg:py-6 space-y-1 flex flex-col overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = location.pathname.startsWith(item.path);
@@ -107,7 +138,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
                 onClick={() => setSidebarOpen(false)}
               >
                 <Icon className={iconClass} />
-                {!collapsed && <span>{item.name}</span>}
+                {!collapsed && <span className="text-sm lg:text-base">{item.name}</span>}
               </Link>
             );
           })}
@@ -117,65 +148,87 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             onClick={() => setSidebarOpen(false)}
           >
             <Calculator className={iconClass} />
-            {!collapsed && <span>Patient Portal</span>}
+            {!collapsed && <span className="text-sm lg:text-base">Patient Portal</span>}
           </Link>
         </nav>
-        <div className={`absolute bottom-0 left-0 right-0 p-6 border-t`}>
+        
+        {/* User Section */}
+        <div className={`p-4 lg:p-6 border-t`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-pink-600">
+              <div className="w-8 h-8 lg:w-10 lg:h-10 bg-pink-100 rounded-full flex items-center justify-center">
+                <span className="text-sm lg:text-base font-medium text-pink-600">
                   {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
               </div>
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">
-                  {user?.username || 'User Name'}
-                </p>
-                <p className="text-xs text-gray-500">
-                  {user?.role?.charAt(0)?.toUpperCase() + user?.role?.slice(1) || 'Role'}
-                </p>
-              </div>
+              {!collapsed && (
+                <div className="ml-3">
+                  <p className="text-sm lg:text-base font-medium text-gray-900 truncate max-w-32">
+                    {user?.username || 'User Name'}
+                  </p>
+                  <p className="text-xs lg:text-sm text-gray-500 capitalize">
+                    {user?.role || 'Role'}
+                  </p>
+                </div>
+              )}
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg"
+              className="p-2 text-gray-400 hover:text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
               title="Logout"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-4 w-4 lg:h-5 lg:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
               </svg>
             </button>
           </div>
         </div>
       </aside>
-      {/* Main content: add md:ml-16 or md:ml-64 for desktop */}
-      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ${mainMargin}`} style={{ marginLeft: collapsed ? '4rem' : '16rem' }}>
-        {/* Top bar always visible */}
-        <header className="fixed top-0 left-0 right-0 flex items-center h-20 px-4 bg-white border-b shadow-sm z-40" style={{ marginLeft: collapsed ? '4rem' : '16rem', height: '5rem' }}>
-          {/* Hamburger always visible */}
-          <Button variant="ghost" size="icon" onClick={() => setCollapsed((c) => !c)}>
-            <span className="sr-only">Toggle sidebar</span>
-            <Menu className="h-6 w-6" />
+      
+      {/* Main content */}
+      <div className={`flex-1 flex flex-col min-h-screen transition-all duration-200 ${mainMargin}`}>
+        {/* Top bar */}
+        <header className={`fixed top-0 left-0 right-0 flex items-center h-16 lg:h-20 px-3 sm:px-4 lg:px-6 bg-white border-b shadow-sm z-30 transition-all duration-200 ${collapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
+          {/* Hamburger for mobile, toggle for desktop */}
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => window.innerWidth < 1024 ? setSidebarOpen(true) : setCollapsed((c) => !c)}
+            className="lg:hidden flex-shrink-0"
+          >
+            <Menu className="h-5 w-5" />
           </Button>
-          <span className="ml-4 font-bold text-2xl text-pink-600 tracking-wide">{getPageName(location.pathname)}</span>
-          <div className="ml-auto flex items-center gap-4 relative">
+          
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setCollapsed((c) => !c)}
+            className="hidden lg:flex flex-shrink-0"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          
+          <span className="ml-2 sm:ml-4 font-bold text-base sm:text-lg lg:text-2xl text-pink-600 tracking-wide truncate flex-1 min-w-0">
+            {getPageName(location.pathname)}
+          </span>
+          
+          <div className="ml-auto flex items-center gap-2 lg:gap-4 relative flex-shrink-0" ref={dropdownRef}>
             <button
-              className="rounded-full bg-pink-100 p-2 hover:bg-pink-200 focus:outline-none"
+              className="rounded-full bg-pink-100 p-2 hover:bg-pink-200 focus:outline-none transition-colors"
               onClick={() => setDropdownOpen((open) => !open)}
               aria-label="Profile"
             >
-              <UserIcon className="h-6 w-6 text-pink-600" />
+              <UserIcon className="h-4 w-4 lg:h-5 lg:w-5 text-pink-600" />
             </button>
             {dropdownOpen && (
-              <div className="absolute right-0 top-12 bg-white border rounded shadow-lg py-2 w-56 z-50">
+              <div className="absolute right-0 top-12 bg-white border rounded-lg shadow-lg py-2 w-48 sm:w-56 z-50">
                 <div className="px-4 py-2 border-b">
-                  <p className="text-sm font-medium text-gray-900">{user?.username || 'User'}</p>
-                  <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{user?.username || 'User'}</p>
+                  <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
                 >
                   Logout
                 </button>
@@ -183,8 +236,15 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             )}
           </div>
         </header>
-        {/* Main content area with reduced whitespace */}
-        <main key={location.pathname} className="flex-1 p-2 md:p-6 lg:p-8 max-w-full animate-fade-in" style={{ marginTop: '5rem' }}>{children}</main>
+        
+        {/* Main content area */}
+        <main 
+          key={location.pathname} 
+          className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8 max-w-full animate-fade-in overflow-x-hidden" 
+          style={{ marginTop: '4rem' }}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

@@ -42,106 +42,117 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-100">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-2xl flex flex-col md:flex-row overflow-hidden animate-fade-in-up">
-        {/* Animation/Branding Side */}
-        <div className="hidden md:flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 to-purple-200 p-8 w-1/2 relative">
-          <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className="h-56 mb-6 animate-bounce-slow" />
-          <div className="text-pink-700 font-bold text-lg text-center">Cervical Cancer Awareness</div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 to-purple-100 p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-md sm:max-w-lg lg:max-w-xl xl:max-w-2xl bg-white rounded-xl shadow-2xl flex flex-col lg:flex-row overflow-hidden animate-fade-in-up">
+        {/* Animation/Branding Side - Hidden on mobile, visible on larger screens */}
+        <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 to-purple-200 p-6 lg:p-8 w-full lg:w-1/2 relative">
+          <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className="h-32 sm:h-40 lg:h-48 xl:h-56 mb-4 lg:mb-6 animate-bounce-slow" />
+          <div className="text-pink-700 font-bold text-base lg:text-lg text-center">Cervical Cancer Awareness</div>
         </div>
+        
         {/* Form Side */}
-        <div className="flex-1 flex flex-col justify-center p-8">
-          <h1 className="text-3xl font-bold mb-2 text-pink-600">Register</h1>
-          <p className="text-gray-500 mb-6">Create your account to access Tumaini.</p>
-          <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-10">
+          {/* Mobile Logo - Only visible on mobile */}
+          <div className="lg:hidden flex justify-center mb-6">
+            <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className="h-16 animate-pulse" />
+          </div>
+          
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-pink-600 text-center lg:text-left">Register</h1>
+          <p className="text-gray-500 mb-6 text-center lg:text-left text-sm sm:text-base">Create your account to access Tumaini.</p>
+          
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
             <div>
-              <label className="block text-sm font-medium mb-1">Username</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Username</label>
               <input 
                 type="text" 
-                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-300 transition" 
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base" 
                 value={username} 
                 onChange={e => setUsername(e.target.value)} 
                 required 
                 disabled={loading}
+                placeholder="Enter your username"
               />
             </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Email</label>
               <input 
                 type="email" 
-                className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-300 transition" 
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base" 
                 value={email} 
                 onChange={e => setEmail(e.target.value)} 
                 required 
                 disabled={loading}
+                placeholder="Enter your email"
               />
             </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-1">Password</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Password</label>
               <div className="relative">
                 <input 
                   type={showPassword ? "text" : "password"}
-                  className="w-full border rounded px-3 py-2 pr-10 focus:ring-2 focus:ring-pink-300 transition" 
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 pr-12 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base" 
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   required 
                   disabled={loading}
+                  placeholder="Enter your password"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
                   disabled={loading}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
                   ) : (
-                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
                   )}
                 </button>
               </div>
             </div>
+            
             <div>
-              <label className="block text-sm font-medium mb-1">Role</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Role</label>
               <select 
-                className="w-full border rounded px-3 py-2" 
                 value={role} 
                 onChange={e => setRole(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base bg-white"
                 disabled={loading}
               >
                 <option value="Patient">Patient</option>
                 <option value="Admin">Admin</option>
               </select>
             </div>
-            <button 
-              type="submit" 
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded shadow transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            
+            <button
+              type="submit"
               disabled={loading}
+              className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm sm:text-base"
             >
-              {loading ? "Creating account..." : "Register"}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Creating account...
+                </div>
+              ) : (
+                "Create Account"
+              )}
             </button>
           </form>
-          <div className="mt-4 text-sm text-center">
-            Already have an account? <a href="/login" className="text-pink-600 underline">Login</a>
+          
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <a href="/login" className="text-pink-600 hover:text-pink-700 font-medium transition-colors">
+                Sign in here
+              </a>
+            </p>
           </div>
         </div>
       </div>
-      <style>{`
-        .animate-fade-in-up {
-          animation: fadeInUp 0.7s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-        }
-        @keyframes fadeInUp {
-          0% { opacity: 0; transform: translateY(40px); }
-          100% { opacity: 1; transform: translateY(0); }
-        }
-        .animate-bounce-slow {
-          animation: bounce 2.5s infinite;
-        }
-        @keyframes bounce {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-12px); }
-        }
-      `}</style>
     </div>
   );
 };
