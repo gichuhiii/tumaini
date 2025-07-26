@@ -402,19 +402,6 @@ const PatientRisk = () => {
     }
   };
 
-  const getRiskLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'high':
-        return 'bg-red-100 text-red-700';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'low':
-        return 'bg-green-100 text-green-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  };
-
   return (
     <div className="w-full">
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 lg:gap-6">
