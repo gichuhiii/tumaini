@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 interface RiskAssessmentData {
   age: string;
@@ -36,15 +35,9 @@ const initialForm: RiskAssessmentData = {
 };
 
 // Allowed values
-const REGION_OPTIONS = [
-  'embu', 'garissa', 'kakamega', 'kericho', 'kitale', 'loitoktok', 'machakos', 'moi', 'mombasa', 'nakuru', 'pumwani'
-];
 const YES_NO_OPTIONS = [
   { label: 'Yes', value: 'y' },
   { label: 'No', value: 'n' }
-];
-const SCREENING_TYPE_OPTIONS = [
-  'hpv dna', 'pap smear', 'via'
 ];
 
 const PatientRisk = () => {

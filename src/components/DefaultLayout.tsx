@@ -7,7 +7,6 @@ import {
   Boxes,
   Calculator,
   BarChart2,
-  Users,
   Menu,
   User as UserIcon,
   X,

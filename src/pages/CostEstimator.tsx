@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import treatmentCosts from "../data/treatment_costs.json";
-import resourcesInventory from "../data/resources_inventory.json";
 
 // Extract unique values from JSON data
 const getUniqueFacilities = () => [...new Set(treatmentCosts.map(item => item.Facility))];
-const getUniqueServices = () => [...new Set(treatmentCosts.map(item => item.Service))];
 const getUniqueCategories = () => [...new Set(treatmentCosts.map(item => item.Category))];
 
 const CostEstimator = () => {
