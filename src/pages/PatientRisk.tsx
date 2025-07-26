@@ -200,31 +200,43 @@ const PatientRisk = () => {
     switch (level.toLowerCase()) {
       case 'high':
         return {
-          description: "You have a high risk of cervical cancer. Immediate medical attention is recommended.",
-          urgency: "Immediate action required",
+          description: "Your results suggest that you may benefit from additional screening. This is important for your health, and we're here to help you take the next steps.",
+          urgency: "Recommended follow-up",
           followUp: "3-6 months",
-          services: ["Colposcopy", "Biopsy", "Specialist consultation"]
+          services: ["Colposcopy", "Biopsy", "Specialist consultation"],
+          icon: "🔍",
+          color: "bg-orange-50 text-orange-700 border-orange-200",
+          supportMessage: "It's natural to have questions. We recommend speaking with a healthcare provider who can explain your results and next steps in detail."
         };
       case 'medium':
         return {
-          description: "You have a moderate risk of cervical cancer. Regular monitoring is important.",
-          urgency: "Action recommended",
+          description: "Your results suggest that you may benefit from a follow-up screening. This is common and often just a precaution to ensure everything is okay.",
+          urgency: "Regular monitoring recommended",
           followUp: "6-12 months",
-          services: ["Pap Smear", "HPV Test", "Follow-up consultation"]
+          services: ["Pap Smear", "HPV Test", "Follow-up consultation"],
+          icon: "📋",
+          color: "bg-blue-50 text-blue-700 border-blue-200",
+          supportMessage: "This is a routine follow-up. Many people have similar results and go on to have normal screenings."
         };
       case 'low':
         return {
-          description: "You have a low risk of cervical cancer. Continue with regular screening.",
-          urgency: "Regular monitoring",
+          description: "Your results look good! Continue with regular screening as recommended by your healthcare provider.",
+          urgency: "Continue regular screening",
           followUp: "1-3 years",
-          services: ["Regular Pap Smear", "HPV Test"]
+          services: ["Regular Pap Smear", "HPV Test"],
+          icon: "✅",
+          color: "bg-green-50 text-green-700 border-green-200",
+          supportMessage: "Great news! Keep up with your regular screenings and healthy lifestyle choices."
         };
       default:
         return {
-          description: "Risk assessment completed. Follow medical recommendations.",
+          description: "Your risk assessment is complete. Please follow the recommendations provided by your healthcare provider.",
           urgency: "Follow recommendations",
           followUp: "As recommended",
-          services: ["Consult healthcare provider"]
+          services: ["Consult healthcare provider"],
+          icon: "ℹ️",
+          color: "bg-gray-50 text-gray-700 border-gray-200",
+          supportMessage: "If you have any questions about your results, please consult with your healthcare provider."
         };
     }
   };
@@ -610,63 +622,72 @@ const PatientRisk = () => {
           
           {result && (
             <div className="space-y-6">
-              {/* Risk Level Summary */}
+              {/* Supportive Results Header */}
               {(() => {
                 const riskInfo = getRiskLevelInfo(result.risk_level);
                 return (
-                  <div className="text-center p-6 rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200">
-                    <div className="text-3xl font-bold mb-3">
-                      Risk Level: <span className={getRiskLevelColor(result.risk_level)}>{result.risk_level.toUpperCase()}</span>
+                  <div className="bg-white rounded-lg border p-6">
+                    <div className="flex items-center mb-4">
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${riskInfo.color}`}>
+                        <span className="mr-2">{riskInfo.icon}</span>
+                        Risk Level: {result.risk_level.toUpperCase()}
+                      </span>
                     </div>
-                    <div className="text-sm text-gray-700 mb-3">{riskInfo.description}</div>
-                    <div className="inline-block px-4 py-2 bg-pink-100 text-pink-800 rounded-full text-sm font-medium">
-                      {riskInfo.urgency}
+                    
+                    <div className="mb-6">
+                      <h3 className="font-semibold text-gray-800 mb-2 text-lg">What This Means</h3>
+                      <p className="text-gray-600 leading-relaxed">{riskInfo.description}</p>
+                    </div>
+
+                    <div className="mb-6">
+                      <h3 className="font-semibold text-gray-800 mb-2 text-lg">Recommended Next Steps</h3>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div className="flex items-center mb-2">
+                          <span className="text-blue-600 mr-2">📅</span>
+                          <span className="font-medium text-blue-800">Next Follow-up: {riskInfo.followUp}</span>
+                        </div>
+                        <div className="text-sm text-blue-700">
+                          <span className="font-medium">Recommended Services:</span>
+                          <ul className="mt-1 space-y-1">
+                            {riskInfo.services.map((service, index) => (
+                              <li key={index} className="ml-4">• {service}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    {result.recommendations.length > 0 && (
+                      <div className="mb-6">
+                        <h3 className="font-semibold text-gray-800 mb-2 text-lg">Additional Recommendations</h3>
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                          <ul className="space-y-2">
+                            {result.recommendations.map((rec, index) => (
+                              <li key={index} className="text-sm text-green-700 flex items-start">
+                                <span className="text-green-500 mr-2 mt-1">✓</span>
+                                {rec}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="mb-6">
+                      <h3 className="font-semibold text-gray-800 mb-2 text-lg">Support & Resources</h3>
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <p className="text-sm text-purple-700 mb-3">{riskInfo.supportMessage}</p>
+                        <div className="text-xs text-purple-600">
+                          <p>• You can discuss these results with your healthcare provider</p>
+                          <p>• Keep this information for your records</p>
+                          <p>• Remember, early detection is key to good health outcomes</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
               })()}
               
-              {/* Detailed Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Recommendations */}
-                <div className="bg-white border rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <span className="text-green-500 mr-2">✓</span>
-                    Recommendations
-                  </h3>
-                  <ul className="space-y-2">
-                    {result.recommendations.map((rec, index) => (
-                      <li key={index} className="text-sm text-gray-700 flex items-start">
-                        <span className="text-green-500 mr-2 mt-1">•</span>
-                        {rec}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Follow-up Schedule */}
-                <div className="bg-white border rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <span className="text-blue-500 mr-2">📅</span>
-                    Follow-up Schedule
-                  </h3>
-                  <div className="space-y-2">
-                    <div className="text-sm">
-                      <span className="font-medium text-gray-700">Next Follow-up:</span>
-                      <span className="text-blue-600 ml-2">{getRiskLevelInfo(result.risk_level).followUp}</span>
-                    </div>
-                    <div className="text-sm">
-                      <span className="font-medium text-gray-700">Recommended Services:</span>
-                      <ul className="mt-1 space-y-1">
-                        {getRiskLevelInfo(result.risk_level).services.map((service, index) => (
-                          <li key={index} className="text-blue-600 text-xs ml-4">• {service}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
               {/* Cost Estimation and Location-based Services */}
               {form.region && (() => {
                 const costEstimates = getCostEstimates(form.region, "colposcopy");
@@ -705,7 +726,6 @@ const PatientRisk = () => {
                           </button>
                         </div>
                       )}
-                      
                       {/* Pap Smear Costs */}
                       {papSmearCosts && (
                         <div className="bg-blue-50 rounded-lg p-3 relative">
@@ -725,7 +745,6 @@ const PatientRisk = () => {
                           </button>
                         </div>
                       )}
-                      
                       {/* HPV Test Costs */}
                       {hpvCosts && (
                         <div className="bg-green-50 rounded-lg p-3 relative">
@@ -746,7 +765,6 @@ const PatientRisk = () => {
                         </div>
                       )}
                     </div>
-                    
                     {/* Insurance Information */}
                     <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
                       <div className="text-sm">
@@ -761,33 +779,36 @@ const PatientRisk = () => {
                         </div>
                       )}
                     </div>
+                    {/* Modal for service info */}
+                    <ServiceModal service={modalService} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
                   </div>
                 );
               })()}
 
-              {/* Risk Factors */}
+              {/* Risk Factors - Only show if there are factors and they're not too alarming */}
               {result.factors.length > 0 && (
                 <div className="bg-white border rounded-lg p-4">
                   <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
-                    <span className="text-red-500 mr-2">⚠️</span>
-                    Risk Factors Identified
+                    <span className="text-blue-500 mr-2">ℹ️</span>
+                    Additional Information
                   </h3>
-                  <ul className="space-y-2">
-                    {result.factors.map((factor, index) => (
-                      <li key={index} className="text-sm text-gray-700 flex items-start">
-                        <span className="text-red-500 mr-2 mt-1">•</span>
-                        {factor}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-blue-700 mb-2">The following factors were considered in your assessment:</p>
+                    <ul className="space-y-1">
+                      {result.factors.map((factor, index) => (
+                        <li key={index} className="text-sm text-blue-700 flex items-start">
+                          <span className="text-blue-500 mr-2 mt-1">•</span>
+                          {factor}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               )}
             </div>
           )}
         </div>
       </div>
-      {/* Modal for service info */}
-      <ServiceModal service={modalService} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
