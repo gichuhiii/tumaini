@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -8,7 +7,6 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

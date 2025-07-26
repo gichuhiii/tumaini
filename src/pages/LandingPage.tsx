@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Shield, Heart, Users, ArrowRight, CheckCircle, Star, Award, Zap, Sparkles, Globe, Clock, Phone, Mail, MapPin, ChevronDown, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { Shield, Heart, Users, ArrowRight, Star, Sparkles, Phone, Mail, MapPin } from "lucide-react";
 
 const LandingPage = () => {
-  const [isVisible, setIsVisible] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    setIsVisible(true);
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { User, Mail, Calendar, Shield, Edit, Building2, MapPin } from "lucide-react";
 
 const AdminProfile = () => {

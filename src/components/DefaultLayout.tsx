@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
@@ -33,7 +33,6 @@ function getPageName(pathname: string) {
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
