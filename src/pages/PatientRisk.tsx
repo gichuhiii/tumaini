@@ -167,7 +167,53 @@ const getRiskLevelColorRGB = (level: string) => {
   }
 };
 
-const downloadPDF = async (result: RiskResult, form: RiskAssessmentData) => {
+// Move getRiskLevelInfo above downloadPDF so it is defined before use
+const getRiskLevelInfo = (level: string) => {
+  switch (level.toLowerCase()) {
+    case 'high':
+      return {
+        description: "Your results suggest that you may benefit from additional screening. This is important for your health, and we're here to help you take the next steps.",
+        urgency: "Recommended follow-up",
+        followUp: "3-6 months",
+        services: ["Colposcopy", "Biopsy", "Specialist consultation"],
+        icon: "🔍",
+        color: "bg-orange-50 text-orange-700 border-orange-200",
+        supportMessage: "It's natural to have questions. We recommend speaking with a healthcare provider who can explain your results and next steps in detail."
+      };
+    case 'medium':
+      return {
+        description: "Your results suggest that you may benefit from a follow-up screening. This is common and often just a precaution to ensure everything is okay.",
+        urgency: "Regular monitoring recommended",
+        followUp: "6-12 months",
+        services: ["Pap Smear", "HPV Test", "Follow-up consultation"],
+        icon: "📋",
+        color: "bg-blue-50 text-blue-700 border-blue-200",
+        supportMessage: "This is a routine follow-up. Many people have similar results and go on to have normal screenings."
+      };
+    case 'low':
+      return {
+        description: "Your results look good! Continue with regular screening as recommended by your healthcare provider.",
+        urgency: "Continue regular screening",
+        followUp: "1-3 years",
+        services: ["Regular Pap Smear", "HPV Test"],
+        icon: "✅",
+        color: "bg-green-50 text-green-700 border-green-200",
+        supportMessage: "Great news! Keep up with your regular screenings and healthy lifestyle choices."
+      };
+    default:
+      return {
+        description: "Your risk assessment is complete. Please follow the recommendations provided by your healthcare provider.",
+        urgency: "Follow recommendations",
+        followUp: "As recommended",
+        services: ["Consult healthcare provider"],
+        icon: "ℹ️",
+        color: "bg-gray-50 text-gray-700 border-gray-200",
+        supportMessage: "If you have any questions about your results, please consult with your healthcare provider."
+      };
+  }
+};
+
+const downloadPDF = async (result: RiskResult) => {
   const jsPDF = (await import('jspdf')).default;
   const doc = new jsPDF();
   const riskInfo = getRiskLevelInfo(result.risk_level);
@@ -268,52 +314,6 @@ const PatientRisk = () => {
       range: `${minCost.toLocaleString()} - ${maxCost.toLocaleString()}`,
       facilities: regionServices.map(item => item.Facility)
     };
-  };
-
-  // Helper function to get risk level information
-  const getRiskLevelInfo = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'high':
-        return {
-          description: "Your results suggest that you may benefit from additional screening. This is important for your health, and we're here to help you take the next steps.",
-          urgency: "Recommended follow-up",
-          followUp: "3-6 months",
-          services: ["Colposcopy", "Biopsy", "Specialist consultation"],
-          icon: "🔍",
-          color: "bg-orange-50 text-orange-700 border-orange-200",
-          supportMessage: "It's natural to have questions. We recommend speaking with a healthcare provider who can explain your results and next steps in detail."
-        };
-      case 'medium':
-        return {
-          description: "Your results suggest that you may benefit from a follow-up screening. This is common and often just a precaution to ensure everything is okay.",
-          urgency: "Regular monitoring recommended",
-          followUp: "6-12 months",
-          services: ["Pap Smear", "HPV Test", "Follow-up consultation"],
-          icon: "📋",
-          color: "bg-blue-50 text-blue-700 border-blue-200",
-          supportMessage: "This is a routine follow-up. Many people have similar results and go on to have normal screenings."
-        };
-      case 'low':
-        return {
-          description: "Your results look good! Continue with regular screening as recommended by your healthcare provider.",
-          urgency: "Continue regular screening",
-          followUp: "1-3 years",
-          services: ["Regular Pap Smear", "HPV Test"],
-          icon: "✅",
-          color: "bg-green-50 text-green-700 border-green-200",
-          supportMessage: "Great news! Keep up with your regular screenings and healthy lifestyle choices."
-        };
-      default:
-        return {
-          description: "Your risk assessment is complete. Please follow the recommendations provided by your healthcare provider.",
-          urgency: "Follow recommendations",
-          followUp: "As recommended",
-          services: ["Consult healthcare provider"],
-          icon: "ℹ️",
-          color: "bg-gray-50 text-gray-700 border-gray-200",
-          supportMessage: "If you have any questions about your results, please consult with your healthcare provider."
-        };
-    }
   };
 
   const validate = (): boolean => {
@@ -870,7 +870,7 @@ const PatientRisk = () => {
               <div className="flex justify-end">
                 <Button
                   className="bg-pink-500 hover:bg-pink-600 text-white"
-                  onClick={() => downloadPDF(result, form)}
+                  onClick={() => downloadPDF(result)}
                 >
                   Download Results
                 </Button>
