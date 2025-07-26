@@ -378,7 +378,7 @@ const PatientRisk = () => {
         risk_level: data.risk_level || "Unknown",
         risk_score: data.risk_score || 0,
         factors: data.notes || [],
-        recommendations: [data.recommended_action] || [],
+        recommendations: data.recommended_action ? [data.recommended_action] : [],
         next_screening_date: data.recommended_action ? "Immediate follow-up recommended" : "To be determined",
       });
       
