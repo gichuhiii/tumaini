@@ -22,13 +22,11 @@ const navItems = [
   { name: "Inventory Status", path: "/inventory", icon: Boxes },
   { name: "Cost Estimator", path: "/cost-estimator", icon: Calculator },
   { name: "Reports & Trends", path: "/reports", icon: BarChart2 },
-  { name: "Patient Records", path: "/patients", icon: Users },
 ];
 
 function getPageName(pathname: string) {
   if (pathname === "/" || pathname === "/dashboard") return "Dashboard";
   const item = navItems.find((item) => pathname.startsWith(item.path));
-  if (pathname === "/patient-portal") return "Patient Portal";
   return item ? item.name : "";
 }
 
@@ -110,12 +108,12 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
       >
         {/* Sidebar Header */}
         <div className="h-16 lg:h-20 flex items-center justify-between px-4 lg:px-6 border-b">
-          <div className="flex items-center">
-            <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className={`h-8 lg:h-10 transition-all duration-200 ${collapsed ? "hidden" : "block"}`} />
+          <Link to="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <img src="/tumAIni%20logo-no%20bg.png" alt="Tumaini Logo" className={`h-10 lg:h-10 transition-all duration-200 ${collapsed ? "hidden" : "block"}`} />
             {!collapsed && (
               <span className="ml-3 text-lg lg:text-xl font-bold text-pink-600">Tumaini</span>
             )}
-          </div>
+          </Link>
           {/* Close button for mobile */}
           <button
             onClick={() => setSidebarOpen(false)}
@@ -142,14 +140,7 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             );
           })}
-          <Link
-            to="/patient-portal"
-            className={navItemClass(location.pathname === "/patient-portal")}
-            onClick={() => setSidebarOpen(false)}
-          >
-            <Calculator className={iconClass} />
-            {!collapsed && <span className="text-sm lg:text-base">Patient Portal</span>}
-          </Link>
+
         </nav>
         
         {/* User Section */}

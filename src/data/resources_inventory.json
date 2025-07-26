@@ -1,0 +1,802 @@
+[
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani ",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 1935.25,
+        "Available Stock": 94
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 4758.5,
+        "Available Stock": 28
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 3686.77,
+        "Available Stock": 86
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 3033.43,
+        "Available Stock": 75
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 864.49,
+        "Available Stock": 3
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 864.37,
+        "Available Stock": 29
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 384.61,
+        "Available Stock": 3
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 4344.26,
+        "Available Stock": 91
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 3045.46,
+        "Available Stock": 28
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "NAKURU",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 3569.56,
+        "Available Stock": 35
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 200.86,
+        "Available Stock": 89
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 4852.56,
+        "Available Stock": 35
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 4178.97,
+        "Available Stock": 97
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi ",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 1140.46,
+        "Available Stock": 11
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 990.94,
+        "Available Stock": 45
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi ",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 998.68,
+        "Available Stock": 33
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 1590.79,
+        "Available Stock": 68
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani ",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 2671.31,
+        "Available Stock": 10
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 2216.53,
+        "Available Stock": 80
+    },
+    {
+        "Facility": "Garissa County Referral Hospital",
+        "Region": "Garissa ",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 1527.02,
+        "Available Stock": 73
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 3098.08,
+        "Available Stock": 5
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 783.52,
+        "Available Stock": 10
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 1531.51,
+        "Available Stock": 48
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 1895.17,
+        "Available Stock": 81
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi ",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 2334.74,
+        "Available Stock": 47
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3947.36,
+        "Available Stock": 85
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 1078.4,
+        "Available Stock": 77
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 2619.75,
+        "Available Stock": 93
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 3002.83,
+        "Available Stock": 59
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa ",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 327.61,
+        "Available Stock": 81
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3076.97,
+        "Available Stock": 87
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi ",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 935.57,
+        "Available Stock": 29
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 418.75,
+        "Available Stock": 51
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 4749.54,
+        "Available Stock": 27
+    },
+    {
+        "Facility": "Garissa County Referral Hospital",
+        "Region": "Garissa",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 4831.6,
+        "Available Stock": 27
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 4061.15,
+        "Available Stock": 82
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 1592.61,
+        "Available Stock": 33
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 578.59,
+        "Available Stock": 95
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 3452.74,
+        "Available Stock": 33
+    },
+    {
+        "Facility": "Garissa County Referral Hospital",
+        "Region": "Garissa",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 2256.75,
+        "Available Stock": 74
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa ",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 697.99,
+        "Available Stock": 28
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 2526.37,
+        "Available Stock": 63
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 268.5,
+        "Available Stock": 14
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Mombasa ",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 4555.67,
+        "Available Stock": 87
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa ",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 1368.02,
+        "Available Stock": 8
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa ",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 3346.36,
+        "Available Stock": 76
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho ",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 1627.38,
+        "Available Stock": 32
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 2648.33,
+        "Available Stock": 87
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 2778.88,
+        "Available Stock": 96
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 1005.79,
+        "Available Stock": 14
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 4850.96,
+        "Available Stock": 20
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho ",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 3898.15,
+        "Available Stock": 92
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 4703.54,
+        "Available Stock": 97
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 4484.65,
+        "Available Stock": 13
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 3029.71,
+        "Available Stock": 77
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 4617.18,
+        "Available Stock": 47
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos ",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 533.61,
+        "Available Stock": 99
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 1060.32,
+        "Available Stock": 76
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 321.61,
+        "Available Stock": 2
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 1694.12,
+        "Available Stock": 39
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Ibuprofen 400mg",
+        "Cost (KES)": 2004.52,
+        "Available Stock": 30
+    },
+    {
+        "Facility": "Garissa County Referral Hospital",
+        "Region": "Garissa ",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 1429.61,
+        "Available Stock": 10
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 4160.81,
+        "Available Stock": 97
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 1848.09,
+        "Available Stock": 16
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 1476.58,
+        "Available Stock": 21
+    },
+    {
+        "Facility": "Kakamega County Referral Hospital",
+        "Region": "Kakamega",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 2759.21,
+        "Available Stock": 77
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 790.53,
+        "Available Stock": 69
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 4030.77,
+        "Available Stock": 51
+    },
+    {
+        "Facility": "Moi Teaching and Referral Hospital",
+        "Region": "Moi",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 465.3,
+        "Available Stock": 66
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 4935.75,
+        "Available Stock": 31
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 3884.0,
+        "Available Stock": 43
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 1073.71,
+        "Available Stock": 70
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 127.06,
+        "Available Stock": 28
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 4095.76,
+        "Available Stock": 90
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3563.6,
+        "Available Stock": 8
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 3672.14,
+        "Available Stock": 9
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3879.22,
+        "Available Stock": 35
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 462.82,
+        "Available Stock": 69
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos ",
+        "Category": "Lab Consumables",
+        "Item": "CA-125 Test Kit",
+        "Cost (KES)": 1856.48,
+        "Available Stock": 73
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 667.76,
+        "Available Stock": 100
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 4329.21,
+        "Available Stock": 24
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani ",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 3154.16,
+        "Available Stock": 84
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 1721.4,
+        "Available Stock": 54
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 411.44,
+        "Available Stock": 93
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Medications",
+        "Item": "Paracetamol 500mg",
+        "Cost (KES)": 1623.81,
+        "Available Stock": 7
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Speculum",
+        "Cost (KES)": 1693.4,
+        "Available Stock": 13
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3675.07,
+        "Available Stock": 24
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 3224.03,
+        "Available Stock": 17
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Medications",
+        "Item": "Doxycycline 100mg",
+        "Cost (KES)": 4447.34,
+        "Available Stock": 35
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 2413.85,
+        "Available Stock": 9
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 686.01,
+        "Available Stock": 12
+    },
+    {
+        "Facility": "Loitoktok Sub-County Hospital",
+        "Region": "Loitoktok",
+        "Category": "Lab Consumables",
+        "Item": "Pregnancy Test Kit",
+        "Cost (KES)": 3594.9,
+        "Available Stock": 1
+    },
+    {
+        "Facility": "Pumwani Maternity Hospital",
+        "Region": "Pumwani ",
+        "Category": "Medications",
+        "Item": "Combined Oral Contraceptives",
+        "Cost (KES)": 3827.85,
+        "Available Stock": 21
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 2850.26,
+        "Available Stock": 61
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale ",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 3877.74,
+        "Available Stock": 7
+    },
+    {
+        "Facility": "Machakos Level 5 Hospital",
+        "Region": "Machakos",
+        "Category": "Consumables",
+        "Item": "Syringe 5ml",
+        "Cost (KES)": 2519.6,
+        "Available Stock": 0
+    },
+    {
+        "Facility": "Mombasa County Hospital",
+        "Region": "Mombasa",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 2661.39,
+        "Available Stock": 100
+    },
+    {
+        "Facility": "Kericho County Referral Hospital",
+        "Region": "Kericho",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 2194.95,
+        "Available Stock": 54
+    },
+    {
+        "Facility": "Embu Level 5 Hospital",
+        "Region": "Embu ",
+        "Category": "Consumables",
+        "Item": "Latex Gloves (pair)",
+        "Cost (KES)": 224.55,
+        "Available Stock": 19
+    },
+    {
+        "Facility": "Kitale County Hospital",
+        "Region": "Kitale ",
+        "Category": "Consumables",
+        "Item": "Pelvic Ultrasound Gel",
+        "Cost (KES)": 628.67,
+        "Available Stock": 27
+    }
+]

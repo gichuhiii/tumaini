@@ -1,117 +1,283 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import treatmentCosts from "../data/treatment_costs.json";
+import resourcesInventory from "../data/resources_inventory.json";
 
-const screeningTypes = ["Pap Smear", "HPV Test", "Colposcopy"];
-const facilityTypes = ["Public Hospital", "Private Clinic", "Private Hospital"];
-const insuranceTypes = ["NHIF", "Private Insurance", "None"];
-
-const costComparison = [
-  { label: "Public Hospital", range: "KSh 1,500 - 4,000", desc: "Basic screening package", color: "text-green-700" },
-  { label: "Private Clinic", range: "KSh 3,500 - 8,000", desc: "Standard screening package", color: "text-blue-700" },
-  { label: "Private Hospital", range: "KSh 5,000 - 12,000", desc: "Comprehensive screening package", color: "text-purple-700" },
-];
+// Extract unique values from JSON data
+const getUniqueFacilities = () => [...new Set(treatmentCosts.map(item => item.Facility))];
+const getUniqueServices = () => [...new Set(treatmentCosts.map(item => item.Service))];
+const getUniqueCategories = () => [...new Set(treatmentCosts.map(item => item.Category))];
 
 const CostEstimator = () => {
   const [form, setForm] = useState({
-    screening: "",
     facility: "",
-    insurance: "",
-    followup: "",
+    service: "",
+    category: "",
+    insurance: "NHIF",
   });
+  
   const [cost, setCost] = useState({
     procedure: 0,
-    lab: 800,
+    lab: 0,
     followup: 0,
-    total: 800,
+    total: 0,
     insurance: 0,
-    patient: 800,
+    patient: 0,
   });
+
+  const [filteredServices, setFilteredServices] = useState<any[]>([]);
+  const [selectedService, setSelectedService] = useState<any>(null);
+
+  const facilities = getUniqueFacilities();
+  const categories = getUniqueCategories();
+  const insuranceTypes = ["NHIF", "Private Insurance", "None"];
+
+  // Filter services based on selected facility and category
+  useEffect(() => {
+    let filtered = treatmentCosts;
+    
+    if (form.facility) {
+      filtered = filtered.filter(item => item.Facility === form.facility);
+    }
+    
+    if (form.category) {
+      filtered = filtered.filter(item => item.Category === form.category);
+    }
+    
+    setFilteredServices(filtered);
+  }, [form.facility, form.category]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setSelectedService(null);
+  };
+
+  const handleServiceSelect = (service: any) => {
+    setSelectedService(service);
+    calculateCost(service);
+  };
+
+  const calculateCost = (service: any) => {
+    const baseCost = service["Base Cost (KES)"];
+    const insuranceCoverage = service["NHIF Covered"] === "Yes" ? service["Insurance Copay (KES)"] : 0;
+    const outOfPocket = service["Out-of-Pocket (KES)"];
+    
+    // Estimate follow-up cost (20% of base cost)
+    const followupCost = baseCost * 0.2;
+    
+    setCost({
+      procedure: baseCost,
+      lab: baseCost * 0.3, // Estimate 30% for lab costs
+      followup: followupCost,
+      total: baseCost + followupCost,
+      insurance: insuranceCoverage,
+      patient: outOfPocket + followupCost,
+    });
   };
 
   const handleCalculate = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock calculation
-    setCost({
-      procedure: 0,
-      lab: 800,
-      followup: 0,
-      total: 800,
-      insurance: 0,
-      patient: 800,
-    });
+    if (selectedService) {
+      calculateCost(selectedService);
+    }
+  };
+
+  const downloadPDF = async () => {
+    try {
+      // Dynamic import of jsPDF to avoid SSR issues
+      const jsPDF = (await import('jspdf')).default;
+      
+      const doc = new jsPDF();
+      
+      // Add title
+      doc.setFontSize(20);
+      doc.text('Treatment Cost Estimate', 20, 20);
+      
+      // Add date
+      doc.setFontSize(12);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, 35);
+      
+      // Add service details
+      if (selectedService) {
+        doc.setFontSize(14);
+        doc.text('Service Details:', 20, 50);
+        doc.setFontSize(12);
+        doc.text(`Service: ${selectedService.Service}`, 20, 60);
+        doc.text(`Facility: ${selectedService.Facility}`, 20, 70);
+        doc.text(`Category: ${selectedService.Category}`, 20, 80);
+        doc.text(`NHIF Covered: ${selectedService["NHIF Covered"]}`, 20, 90);
+      }
+      
+      // Add cost breakdown
+      doc.setFontSize(14);
+      doc.text('Cost Breakdown (KES):', 20, 110);
+      doc.setFontSize(12);
+      doc.text(`Base Cost: ${cost.procedure.toLocaleString()}`, 20, 120);
+      doc.text(`Laboratory Tests: ${cost.lab.toLocaleString()}`, 20, 130);
+      doc.text(`Follow-up Care: ${cost.followup.toLocaleString()}`, 20, 140);
+      doc.text(`Total Cost: ${cost.total.toLocaleString()}`, 20, 150);
+      doc.text(`Insurance Coverage: -${cost.insurance.toLocaleString()}`, 20, 160);
+      doc.setFontSize(14);
+      doc.text(`Patient Cost: ${cost.patient.toLocaleString()}`, 20, 170);
+      
+      // Add footer
+      doc.setFontSize(10);
+      doc.text('Generated by tumAIni - Cervical Cancer Screening Platform', 20, 280);
+      
+      // Download the PDF
+      doc.save('cost-estimate.pdf');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    }
   };
 
   return (
     <div>
       <h1 className="text-xl font-bold mb-2">Treatment & Screening Cost Estimator</h1>
-      <p className="text-gray-500 mb-6">Calculate estimated costs for cervical cancer screening and treatment procedures.</p>
+      <p className="text-gray-500 mb-6">Calculate estimated costs using real data from Kenyan healthcare facilities.</p>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 w-full">
         {/* Cost Calculator */}
         <form className="bg-white rounded-lg border p-6 space-y-4 w-full card-animate" onSubmit={handleCalculate}>
           <h2 className="font-semibold text-lg mb-2 flex items-center">&#36; Cost Calculator</h2>
-          <p className="text-gray-500 text-sm mb-4">Enter procedure details to estimate costs</p>
+          <p className="text-gray-500 text-sm mb-4">Select facility and service to estimate real costs</p>
+          
           <div className="space-y-3">
             <div>
-              <label className="block text-sm font-medium mb-1">Screening Type</label>
-              <select name="screening" value={form.screening} onChange={handleChange} className="w-full border rounded px-3 py-2 input-animate">
-                <option value="">Select screening type</option>
-                {screeningTypes.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Facility Type</label>
+              <label className="block text-sm font-medium mb-1">Facility</label>
               <select name="facility" value={form.facility} onChange={handleChange} className="w-full border rounded px-3 py-2 input-animate">
-                <option value="">Select facility type</option>
-                {facilityTypes.map((f) => <option key={f} value={f}>{f}</option>)}
+                <option value="">Select facility</option>
+                {facilities.map((f) => <option key={f} value={f}>{f}</option>)}
               </select>
             </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Service Category</label>
+              <select name="category" value={form.category} onChange={handleChange} className="w-full border rounded px-3 py-2 input-animate">
+                <option value="">Select category</option>
+                {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+            
             <div>
               <label className="block text-sm font-medium mb-1">Insurance Coverage</label>
               <select name="insurance" value={form.insurance} onChange={handleChange} className="w-full border rounded px-3 py-2 input-animate">
-                <option value="">Select insurance type</option>
                 {insuranceTypes.map((i) => <option key={i} value={i}>{i}</option>)}
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Follow-up Required</label>
-              <input name="followup" value={form.followup} onChange={handleChange} className="w-full border rounded px-3 py-2 input-animate" placeholder="Follow-up needed?" />
-            </div>
           </div>
-          <Button type="submit" className="w-full bg-pink-500 hover:bg-pink-600 text-white mt-4 btn-animate">Calculate Cost</Button>
+
+          {/* Available Services */}
+          {filteredServices.length > 0 && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium mb-2">Available Services</label>
+              <div className="max-h-40 overflow-y-auto border rounded p-2 space-y-1">
+                {filteredServices.map((service, index) => (
+                  <div 
+                    key={index}
+                    onClick={() => handleServiceSelect(service)}
+                    className={`p-2 rounded cursor-pointer hover:bg-gray-50 ${
+                      selectedService === service ? 'bg-blue-50 border-blue-200' : ''
+                    }`}
+                  >
+                    <div className="font-medium text-sm">{service.Service}</div>
+                    <div className="text-xs text-gray-500">
+                      Base Cost: KSh {service["Base Cost (KES)"].toLocaleString()}
+                      {service["NHIF Covered"] === "Yes" ? " (NHIF Covered)" : " (Not NHIF Covered)"}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <Button type="submit" className="w-full bg-pink-500 hover:bg-pink-600 text-white mt-4 btn-animate">
+            Calculate Cost
+          </Button>
         </form>
+
         {/* Cost Breakdown */}
         <div className="bg-white rounded-lg border p-6 flex flex-col w-full card-animate">
           <h2 className="font-semibold text-lg mb-2 flex items-center">&#36; Cost Breakdown</h2>
           <div className="text-sm mb-2">Estimated costs in Kenyan Shillings (KSh)</div>
+          
+          {selectedService && (
+            <div className="mb-4 p-3 bg-blue-50 rounded">
+              <div className="font-medium text-sm">{selectedService.Service}</div>
+              <div className="text-xs text-gray-600">{selectedService.Facility}</div>
+            </div>
+          )}
+          
           <div className="space-y-1 mb-2">
-            <div className="flex justify-between"><span>Screening Procedure:</span> <span>KSh {cost.procedure}</span></div>
-            <div className="flex justify-between"><span>Laboratory Tests:</span> <span>KSh {cost.lab}</span></div>
-            <div className="flex justify-between"><span>Follow-up Care:</span> <span>KSh {cost.followup}</span></div>
-            <div className="flex justify-between font-semibold border-t pt-2"><span>Total Cost:</span> <span>KSh {cost.total}</span></div>
-            <div className="flex justify-between"><span>Insurance Coverage:</span> <span className="text-green-600">-KSh {cost.insurance}</span></div>
-            <div className="flex justify-between font-bold"><span>Patient Cost:</span> <span className="text-blue-700">KSh {cost.patient}</span></div>
+            <div className="flex justify-between">
+              <span>Base Cost:</span> 
+              <span>KSh {cost.procedure.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Laboratory Tests:</span> 
+              <span>KSh {cost.lab.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Follow-up Care:</span> 
+              <span>KSh {cost.followup.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between font-semibold border-t pt-2">
+              <span>Total Cost:</span> 
+              <span>KSh {cost.total.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Insurance Coverage:</span> 
+              <span className="text-green-600">-KSh {cost.insurance.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between font-bold">
+              <span>Patient Cost:</span> 
+              <span className="text-blue-700">KSh {cost.patient.toLocaleString()}</span>
+            </div>
           </div>
+          
           <div className="flex gap-2 mt-2">
-            <input className="border rounded px-2 py-1 flex-1 input-animate" placeholder="Patient Cost" readOnly value={`KSh ${cost.patient}`} />
+            <input 
+              className="border rounded px-2 py-1 flex-1 input-animate" 
+              placeholder="Patient Cost" 
+              readOnly 
+              value={`KSh ${cost.patient.toLocaleString()}`} 
+            />
             <Button variant="outline" className="btn-animate">Save Estimate</Button>
-            <Button variant="outline" className="btn-animate">Export PDF</Button>
+            <Button 
+              variant="outline" 
+              className="btn-animate"
+              onClick={downloadPDF}
+              disabled={!selectedService}
+            >
+              Download PDF
+            </Button>
           </div>
         </div>
       </div>
+
       {/* Cost Comparison */}
       <div className="bg-white rounded-lg border p-6 w-full card-animate">
-        <h3 className="font-semibold text-md mb-2">Cost Comparison</h3>
+        <h3 className="font-semibold text-md mb-2">Cost Comparison by Category</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {costComparison.map((c) => (
-            <div key={c.label} className="flex flex-col items-center border rounded p-4">
-              <div className={`font-semibold mb-1 ${c.color}`}>{c.label}</div>
-              <div className="text-xl font-bold mb-1">{c.range}</div>
-              <div className="text-xs text-gray-500">{c.desc}</div>
-            </div>
-          ))}
+          {categories.slice(0, 3).map((category) => {
+            const categoryServices = treatmentCosts.filter(item => item.Category === category);
+            const avgCost = categoryServices.reduce((sum, item) => sum + item["Base Cost (KES)"], 0) / categoryServices.length;
+            const minCost = Math.min(...categoryServices.map(item => item["Base Cost (KES)"]));
+            const maxCost = Math.max(...categoryServices.map(item => item["Base Cost (KES)"]));
+            
+            return (
+              <div key={category} className="flex flex-col items-center border rounded p-4">
+                <div className="font-semibold mb-1 text-blue-700">{category}</div>
+                <div className="text-xl font-bold mb-1">
+                  KSh {minCost.toLocaleString()} - {maxCost.toLocaleString()}
+                </div>
+                <div className="text-xs text-gray-500">
+                  Avg: KSh {avgCost.toLocaleString()}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

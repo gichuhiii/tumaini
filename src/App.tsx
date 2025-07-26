@@ -9,7 +9,7 @@ import ScreeningPlanner from "./pages/ScreeningPlanner";
 import InventoryStatus from "./pages/InventoryStatus";
 import CostEstimator from "./pages/CostEstimator";
 import ReportsTrends from "./pages/ReportsTrends";
-import PatientRecord from "./pages/PatientRecord";
+
 import PatientLayout from "./components/PatientLayout";
 import PatientRisk from "./pages/PatientRisk";
 import PatientCost from "./pages/PatientCost";
@@ -68,7 +68,7 @@ function App() {
           <Route path="/inventory" element={<InventoryStatus />} />
           <Route path="/cost-estimator" element={<CostEstimator />} />
           <Route path="/reports" element={<ReportsTrends />} />
-          <Route path="/patients" element={<PatientRecord />} />
+
           <Route path="/profile" element={<AdminProfile />} />
         </Routes>
       </DefaultLayout>
