@@ -1,38 +1,68 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
-  
-  // REMOVE ALL REDUX HOOKS, THUNKS, AND AUTH LOGIC
-
-  useEffect(() => {
-    // This useEffect is no longer needed as auth state is removed
-    // if (isAuthenticated && user) {
-    //   if (user.role === "Admin") {
-    //     navigate("/dashboard");
-    //   } else {
-    //     navigate("/patient/risk");
-    //   }
-    // }
-  }, []); // Removed isAuthenticated and user from dependency array
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      localStorage.setItem('mockUser', JSON.stringify({ username, role }));
-      if (role === 'Admin') {
-        window.location.replace('/dashboard');
-      } else {
-        window.location.replace('/patient/risk');
+    console.log("Submitting login:", { email, password });
+    try {
+      const response = await fetch("https://tumaini.astralyngroup.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+      console.log("Login response status:", response.status);
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        console.log("Login error response:", data);
+        toast.error(data.detail || data.message || "Login failed. Please try again.");
+        setLoading(false);
+        return;
       }
-    }, 1000);
+      // Login successful
+      const data = await response.json().catch(() => ({}));
+      console.log("Login success response:", data);
+      
+      // Extract role from response and store user info
+      const userRole = data.user?.role;
+      console.log("User role from response:", userRole);
+      
+      // Store user info in localStorage
+      localStorage.setItem('user', JSON.stringify(data.user));
+      localStorage.setItem('token', data.access_token);
+      
+      // Show success toast
+      toast.success("Login successful! Redirecting...");
+      
+      // Navigate based on role from response
+      if (userRole === 'admin') {
+        console.log("Navigating to /dashboard");
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 1000);
+      } else {
+        console.log("Navigating to /patient/risk");
+        setTimeout(() => {
+          window.location.href = '/patient/risk';
+        }, 1000);
+      }
+    } catch (err) {
+      console.error("Network error:", err);
+      toast.error("Network error. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -47,23 +77,16 @@ const Login = () => {
         <div className="flex-1 flex flex-col justify-center p-8">
           <h1 className="text-3xl font-bold mb-2 text-pink-600">Login</h1>
           <p className="text-gray-500 mb-6">Welcome back to Tumaini.</p>
-          
-          {/* {error && ( // Removed error display
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          )} */}
-          
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">Username</label>
+              <label className="block text-sm font-medium mb-1">Email</label>
               <input 
-                type="text" 
+                type="email" 
                 className="w-full border rounded px-3 py-2 focus:ring-2 focus:ring-pink-300 transition" 
-                value={username} 
-                onChange={e => setUsername(e.target.value)} 
+                value={email} 
+                onChange={e => setEmail(e.target.value)} 
                 required 
-                // disabled={loading} // Removed loading state
+                disabled={loading}
               />
             </div>
             <div>
@@ -75,13 +98,13 @@ const Login = () => {
                   value={password} 
                   onChange={e => setPassword(e.target.value)} 
                   required 
-                  // disabled={loading} // Removed loading state
+                  disabled={loading}
                 />
                 <button
                   type="button"
                   className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   onClick={() => setShowPassword(!showPassword)}
-                  // disabled={loading} // Removed loading state
+                  disabled={loading}
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
@@ -91,22 +114,10 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Role</label>
-              <select 
-                className="w-full border rounded px-3 py-2" 
-                value={role} 
-                onChange={e => setRole(e.target.value)}
-                // disabled={loading} // Removed loading state
-              >
-                <option value="Patient">Patient</option>
-                <option value="Admin">Admin</option>
-              </select>
-            </div>
             <button 
               type="submit" 
               className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded shadow transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              // disabled={loading} // Removed loading state
+              disabled={loading}
             >
               {loading ? "Logging in..." : "Login"}
             </button>

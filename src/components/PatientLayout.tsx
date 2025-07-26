@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from "sonner";
 
 interface PatientLayoutProps {
   children: React.ReactNode;
@@ -7,7 +8,16 @@ interface PatientLayoutProps {
 
 const PatientLayout: React.FC<PatientLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   const navigation = [
     { name: "Risk Assessment", href: "/patient/risk", icon: "🔍" },
@@ -15,10 +25,18 @@ const PatientLayout: React.FC<PatientLayoutProps> = ({ children }) => {
     { name: "Profile", href: "/patient/profile", icon: "👤" },
   ];
 
-  // Add a logout button that clears 'mockUser' from localStorage and reloads the page
+  // Logout functionality
   const handleLogout = () => {
+    // Clear all localStorage data
+    localStorage.clear();
+    // Also remove specific keys to be extra sure
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     localStorage.removeItem('mockUser');
-    window.location.replace('/');
+    
+    toast.success("Logged out successfully");
+    // Force a complete page reload to reset the app state
+    window.location.href = '/login';
   };
 
   return (
@@ -59,18 +77,15 @@ const PatientLayout: React.FC<PatientLayoutProps> = ({ children }) => {
             <div className="flex items-center">
               <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-pink-600">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  U
+                  {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  User Name
+                  {user?.username || 'User Name'}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  Role
+                  {user?.role?.charAt(0)?.toUpperCase() + user?.role?.slice(1) || 'Role'}
                 </p>
               </div>
             </div>
@@ -130,18 +145,15 @@ const PatientLayout: React.FC<PatientLayoutProps> = ({ children }) => {
             <div className="flex items-center">
               <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-pink-600">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  U
+                  {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  User Name
+                  {user?.username || 'User Name'}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  Role
+                  {user?.role?.charAt(0)?.toUpperCase() + user?.role?.slice(1) || 'Role'}
                 </p>
               </div>
             </div>

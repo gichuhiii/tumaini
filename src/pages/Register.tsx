@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -8,26 +9,36 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
-  
-  // REMOVE ALL REDUX HOOKS, THUNKS, AND AUTH LOGIC
-  // Remove all references to registerUser, registerResult, loginUser, loginResult, error, and loading
-  // Use local state for form fields and navigation only
 
-  // Remove the now-unused useEffect and handleSubmit logic that referenced removed auth state, and ensure the form is a simple local-state form with navigation only
-
-  // Add a simple local handleSubmit for the form
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      localStorage.setItem('mockUser', JSON.stringify({ username, email, role }));
-      if (role === 'Admin') {
-        window.location.replace('/dashboard');
-      } else {
-        window.location.replace('/patient/risk');
+    try {
+      const response = await fetch("https://tumaini.astralyngroup.com/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          role: role.toLowerCase(), // backend expects lowercase (user, admin, patient, etc.)
+        }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        toast.error(data.detail || data.message || "Registration failed. Please try again.");
+        setLoading(false);
+        return;
       }
-    }, 1000);
+      // Registration successful
+      toast.success("Registration successful! Redirecting to login...");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
+    } catch (err) {
+      toast.error("Network error. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -42,13 +53,6 @@ const Register = () => {
         <div className="flex-1 flex flex-col justify-center p-8">
           <h1 className="text-3xl font-bold mb-2 text-pink-600">Register</h1>
           <p className="text-gray-500 mb-6">Create your account to access Tumaini.</p>
-          
-          {/* error && (
-            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {error}
-            </div>
-          ) */}
-          
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">Username</label>

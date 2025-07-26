@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { User, Mail, Calendar, Shield, Edit } from "lucide-react";
+import { User, Mail, Calendar, Shield, Edit, Building2, MapPin } from "lucide-react";
 
-const PatientProfile = () => {
+const AdminProfile = () => {
   const [user, setUser] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -89,10 +89,26 @@ const PatientProfile = () => {
               </div>
             </div>
 
-            {/* Account Information */}
+            {/* Hospital Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Hospital Information</h3>
               
+              <div className="flex items-center space-x-3">
+                <Building2 className="h-5 w-5 text-gray-400" />
+                <div>
+                  <p className="text-sm text-gray-500">Hospital</p>
+                  <p className="font-medium text-gray-900">Tumaini Medical Center</p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <MapPin className="h-5 w-5 text-gray-400" />
+                <div>
+                  <p className="text-sm text-gray-500">Location</p>
+                  <p className="font-medium text-gray-900">Nairobi, Kenya</p>
+                </div>
+              </div>
+
               <div className="flex items-center space-x-3">
                 <Calendar className="h-5 w-5 text-gray-400" />
                 <div>
@@ -100,7 +116,13 @@ const PatientProfile = () => {
                   <p className="font-medium text-gray-900">{formatDate(user.created_at)}</p>
                 </div>
               </div>
+            </div>
+          </div>
 
+          {/* Account Information */}
+          <div className="mt-8 pt-6 border-t">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex items-center space-x-3">
                 <div className="w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
@@ -112,6 +134,14 @@ const PatientProfile = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-center space-x-3">
+                <div className="w-5 h-5 text-gray-400">🏥</div>
+                <div>
+                  <p className="text-sm text-gray-500">Department</p>
+                  <p className="font-medium text-gray-900">Cervical Cancer Screening</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -120,7 +150,8 @@ const PatientProfile = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Information</h3>
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-600">
-                This is your personal profile page where you can view your account information and manage your settings.
+                As an administrator, you have access to manage patient records, screening schedules, and hospital inventory. 
+                This profile contains your personal and hospital information.
               </p>
             </div>
           </div>
@@ -130,4 +161,4 @@ const PatientProfile = () => {
   );
 };
 
-export default PatientProfile; 
+export default AdminProfile; 

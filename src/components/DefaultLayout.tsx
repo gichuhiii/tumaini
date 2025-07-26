@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
@@ -11,7 +11,8 @@ import {
   Menu,
   User as UserIcon,
 } from "lucide-react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from "sonner";
 
 const navItems = [
   { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
@@ -32,19 +33,37 @@ function getPageName(pathname: string) {
 
 const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
 
   // Close sidebar on overlay click (mobile)
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) setSidebarOpen(false);
   };
 
-  // Add a logout button that clears 'mockUser' from localStorage and reloads the page
+  // Logout functionality
   const handleLogout = () => {
+    // Clear all localStorage data
+    localStorage.clear();
+    // Also remove specific keys to be extra sure
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
     localStorage.removeItem('mockUser');
-    window.location.replace('/');
+    
+    toast.success("Logged out successfully");
+    // Force a complete page reload to reset the app state
+    window.location.href = '/login';
   };
 
   // Sidebar width
@@ -107,18 +126,15 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             <div className="flex items-center">
               <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
                 <span className="text-sm font-medium text-pink-600">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  U
+                  {user?.username?.charAt(0)?.toUpperCase() || 'U'}
                 </span>
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  User Name
+                  {user?.username || 'User Name'}
                 </p>
                 <p className="text-xs text-gray-500">
-                  {/* Assuming user state is managed elsewhere or removed */}
-                  Role
+                  {user?.role?.charAt(0)?.toUpperCase() + user?.role?.slice(1) || 'Role'}
                 </p>
               </div>
             </div>
@@ -154,7 +170,16 @@ const DefaultLayout = ({ children }: { children: React.ReactNode }) => {
             </button>
             {dropdownOpen && (
               <div className="absolute right-0 top-12 bg-white border rounded shadow-lg py-2 w-56 z-50">
-                {/* REMOVE USER INFO DISPLAY */}
+                <div className="px-4 py-2 border-b">
+                  <p className="text-sm font-medium text-gray-900">{user?.username || 'User'}</p>
+                  <p className="text-xs text-gray-500">{user?.email || 'user@example.com'}</p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
               </div>
             )}
           </div>
