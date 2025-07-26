@@ -9,10 +9,31 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Patient");
   const [loading, setLoading] = useState(false);
+  const [licenseFile, setLicenseFile] = useState<File | null>(null);
+  const [licenseError, setLicenseError] = useState("");
+  const [issuingAuthority, setIssuingAuthority] = useState("");
+  const [referenceContact, setReferenceContact] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setLicenseError("");
+    if (role === "Admin" && !licenseFile) {
+      setLicenseError("Medical license is required for admin registration.");
+      setLoading(false);
+      return;
+    }
+    // Optionally, require issuing authority and reference for admin
+    if (role === "Admin" && !issuingAuthority) {
+      setLoading(false);
+      toast.error("Please select the issuing authority for your license.");
+      return;
+    }
+    if (role === "Admin" && !referenceContact) {
+      setLoading(false);
+      toast.error("Please provide a reference contact.");
+      return;
+    }
     try {
       const response = await fetch("https://tumaini.astralyngroup.com/register", {
         method: "POST",
@@ -21,7 +42,9 @@ const Register = () => {
           username,
           email,
           password,
-          role: role.toLowerCase(), // backend expects lowercase (user, admin, patient, etc.)
+          role: role.toLowerCase(),
+          issuingAuthority: role === "Admin" ? issuingAuthority : undefined,
+          referenceContact: role === "Admin" ? referenceContact : undefined,
         }),
       });
       if (!response.ok) {
@@ -30,7 +53,6 @@ const Register = () => {
         setLoading(false);
         return;
       }
-      // Registration successful
       toast.success("Registration successful! Redirecting to login...");
       setTimeout(() => {
         window.location.href = "/login";
@@ -126,6 +148,55 @@ const Register = () => {
                 <option value="Admin">Admin</option>
               </select>
             </div>
+            {role === "Admin" && (
+              <>
+                {/* Medical License Upload */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Medical License <span className="text-red-500">*</span></label>
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base bg-white"
+                    onChange={e => setLicenseFile(e.target.files && e.target.files[0] ? e.target.files[0] : null)}
+                    disabled={loading}
+                  />
+                  {licenseError && <div className="text-xs text-red-500 mt-1">{licenseError}</div>}
+                  <div className="text-xs text-gray-500 mt-1">Accepted formats: PDF, JPG, PNG</div>
+                </div>
+                {/* Issuing Authority Select */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Issuing Authority <span className="text-red-500">*</span></label>
+                  <select
+                    value={issuingAuthority}
+                    onChange={e => setIssuingAuthority(e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base bg-white"
+                    disabled={loading}
+                    required={role === "Admin"}
+                  >
+                    <option value="">Select Authority</option>
+                    <option value="KMPDC">Kenya Medical Practitioners and Dentists Council (KMPDC)</option>
+                    <option value="Nursing Council">Nursing Council of Kenya</option>
+                    <option value="Pharmacy Board">Pharmacy and Poisons Board</option>
+                    <option value="Clinical Officers Council">Clinical Officers Council</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                {/* Reference Contact */}
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Reference Contact <span className="text-red-500">*</span></label>
+                  <input
+                    type="text"
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-pink-300 focus:border-pink-300 transition-all duration-200 text-sm sm:text-base"
+                    value={referenceContact}
+                    onChange={e => setReferenceContact(e.target.value)}
+                    placeholder="Name, phone or email of reference"
+                    required={role === "Admin"}
+                    disabled={loading}
+                  />
+                  <div className="text-xs text-gray-500 mt-1">A supervisor, peer, or hospital contact for verification.</div>
+                </div>
+              </>
+            )}
             
             <button
               type="submit"

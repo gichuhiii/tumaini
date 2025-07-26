@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import resourcesInventory from "../data/resources_inventory.json";
 
 const stats = [
   { label: "Total Items", value: 125, description: "Across all categories" },
@@ -11,6 +12,7 @@ const inventoryItems = [
   {
     name: "Pap Smear Kits",
     supplier: "MedSupply Kenya",
+    hospital: "Demo Hospital",
     lastRestocked: "2024-01-10",
     current: 45,
     min: 20,
@@ -18,10 +20,12 @@ const inventoryItems = [
     price: 850,
     unit: "unit",
     status: "high",
+    source: "dummy"
   },
   {
     name: "HPV Test Kits",
     supplier: "BioLab Solutions",
+    hospital: "Demo Hospital",
     lastRestocked: "2024-01-05",
     current: 12,
     min: 15,
@@ -29,10 +33,12 @@ const inventoryItems = [
     price: 2400,
     unit: "unit",
     status: "low",
+    source: "dummy"
   },
   {
     name: "Colposcopy Supplies",
     supplier: "MediEquip Ltd",
+    hospital: "Demo Hospital",
     lastRestocked: "2023-12-28",
     current: 8,
     min: 10,
@@ -40,10 +46,12 @@ const inventoryItems = [
     price: 1200,
     unit: "unit",
     status: "low",
+    source: "dummy"
   },
   {
     name: "Biopsy Forceps",
     supplier: "Surgical Instruments Co",
+    hospital: "Demo Hospital",
     lastRestocked: "2024-01-08",
     current: 25,
     min: 10,
@@ -51,10 +59,12 @@ const inventoryItems = [
     price: 3500,
     unit: "unit",
     status: "high",
+    source: "dummy"
   },
   {
     name: "Acetic Acid Solution",
     supplier: "ChemLab Kenya",
+    hospital: "Demo Hospital",
     lastRestocked: "2024-02-01",
     current: 35,
     min: 20,
@@ -62,8 +72,26 @@ const inventoryItems = [
     price: 450,
     unit: "unit",
     status: "high",
+    source: "dummy"
   },
 ];
+
+// Normalize resourcesInventory to match inventoryItems structure
+const normalizedResourceItems = (resourcesInventory as any[]).map((item) => ({
+  name: item.Item,
+  supplier: item.Facility,
+  hospital: item.Facility,
+  lastRestocked: "-", // Not available in JSON
+  current: item["Available Stock"],
+  min: 10, // Placeholder, real min/max not in JSON
+  max: 100,
+  price: item["Cost (KES)"],
+  unit: "unit",
+  status: item["Available Stock"] <= 10 ? "low" : "high",
+  source: "real"
+}));
+
+const combinedInventory = [...normalizedResourceItems, ...inventoryItems];
 
 const restockAlerts = [
   { name: "HPV Test Kits", message: "below minimum threshold" },
@@ -100,15 +128,20 @@ const InventoryStatus = () => {
           <Button className="bg-pink-500 hover:bg-pink-600 text-white">Request Restock</Button>
         </div>
         <div className="divide-y">
-          {inventoryItems.map((item) => {
+          {combinedInventory.map((item, idx) => {
             const percent = Math.min(100, Math.round(((item.current - item.min) / (item.max - item.min)) * 100));
             const barColor = item.status === "low" ? "bg-red-500" : "bg-green-500";
             return (
-              <div key={item.name} className="py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <div key={item.name + idx} className="py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                 <div className="flex-1">
-                  <div className="font-medium text-gray-900">{item.name} {item.status === "low" && <span className="ml-2 px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-semibold">Low Stock</span>}</div>
+                  <div className="font-medium text-gray-900">
+                    {item.name} {item.status === "low" && <span className="ml-2 px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs font-semibold">Low Stock</span>}
+                    {item.source === "real" && <span className="ml-2 px-2 py-0.5 rounded bg-blue-100 text-blue-700 text-xs font-semibold">Facility</span>}
+                    {item.source === "dummy" && <span className="ml-2 px-2 py-0.5 rounded bg-gray-100 text-gray-700 text-xs font-semibold">Demo</span>}
+                  </div>
                   <div className="text-xs text-gray-500 mb-1">Supplier: {item.supplier} • Last restocked: {item.lastRestocked}</div>
                   <div className="text-xs text-gray-700 mb-1">Current: {item.current} {item.unit}</div>
+                  <div className="text-xs text-blue-700 mb-1 font-semibold">Hospital: {item.hospital}</div>
                   <div className="w-full h-2 bg-gray-200 rounded mb-1">
                     <div className={`${barColor} h-2 rounded`} style={{ width: `${percent}%` }}></div>
                   </div>
