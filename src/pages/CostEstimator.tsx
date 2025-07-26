@@ -6,6 +6,117 @@ import treatmentCosts from "../data/treatment_costs.json";
 const getUniqueFacilities = () => [...new Set(treatmentCosts.map(item => item.Facility))];
 const getUniqueCategories = () => [...new Set(treatmentCosts.map(item => item.Category))];
 
+// Modal component for detailed service information
+const ServiceModal = ({ service, isOpen, onClose, onSelect }: { service: any; isOpen: boolean; onClose: () => void; onSelect: () => void }) => {
+  if (!isOpen || !service) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Service Details</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+          
+          <div className="space-y-4">
+            {/* Service Header */}
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.Service}</h3>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Facility:</span> {service.Facility}
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Category:</span> {service.Category}
+              </div>
+            </div>
+
+            {/* Cost Breakdown */}
+            <div className="border rounded-lg p-4">
+              <h4 className="font-semibold mb-3 text-gray-800">Cost Breakdown</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm">Base Cost:</span>
+                  <span className="font-medium">KSh {service["Base Cost (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Insurance Copay:</span>
+                  <span className="font-medium">KSh {service["Insurance Copay (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Out-of-Pocket:</span>
+                  <span className="font-medium">KSh {service["Out-of-Pocket (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="border-t pt-2 mt-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">NHIF Coverage:</span>
+                    <span className={`font-medium ${service["NHIF Covered"] === "Yes" ? "text-green-600" : "text-red-600"}`}>
+                      {service["NHIF Covered"]}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Information */}
+            <div className="border rounded-lg p-4">
+              <h4 className="font-semibold mb-3 text-gray-800">Additional Information</h4>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="font-medium">Service Type:</span> {service.Category}
+                </div>
+                <div>
+                  <span className="font-medium">Facility Region:</span> {service.Region || "N/A"}
+                </div>
+                <div>
+                  <span className="font-medium">Insurance Status:</span> 
+                  <span className={`ml-1 ${service["NHIF Covered"] === "Yes" ? "text-green-600" : "text-orange-600"}`}>
+                    {service["NHIF Covered"] === "Yes" ? "Covered by NHIF" : "Not covered by NHIF"}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Recommendations */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold mb-2 text-blue-800">Recommendations</h4>
+              <div className="text-sm text-blue-700 space-y-1">
+                {service["NHIF Covered"] === "Yes" ? (
+                  <div>✓ This service is covered by NHIF - you may be eligible for reduced costs</div>
+                ) : (
+                  <div>⚠ This service is not covered by NHIF - consider private insurance options</div>
+                )}
+                <div>✓ Contact the facility directly for appointment scheduling</div>
+                <div>✓ Bring your ID and insurance card (if applicable) to your appointment</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex gap-3 mt-6">
+            <Button 
+              onClick={onClose}
+              className="flex-1 bg-gray-500 hover:bg-gray-600 text-white"
+            >
+              Close
+            </Button>
+            <Button 
+              onClick={onSelect}
+              className="flex-1 bg-pink-500 hover:bg-pink-600 text-white"
+            >
+              Select This Service
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CostEstimator = () => {
   const [form, setForm] = useState({
     facility: "",
@@ -25,6 +136,8 @@ const CostEstimator = () => {
 
   const [filteredServices, setFilteredServices] = useState<any[]>([]);
   const [selectedService, setSelectedService] = useState<any>(null);
+  const [modalService, setModalService] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const facilities = getUniqueFacilities();
   const categories = getUniqueCategories();
@@ -53,6 +166,23 @@ const CostEstimator = () => {
   const handleServiceSelect = (service: any) => {
     setSelectedService(service);
     calculateCost(service);
+  };
+
+  const handleServiceClick = (service: any) => {
+    setModalService(service);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalService(null);
+  };
+
+  const selectServiceFromModal = () => {
+    if (modalService) {
+      handleServiceSelect(modalService);
+      closeModal();
+    }
   };
 
   const calculateCost = (service: any) => {
@@ -174,15 +304,34 @@ const CostEstimator = () => {
                 {filteredServices.map((service, index) => (
                   <div 
                     key={index}
-                    onClick={() => handleServiceSelect(service)}
-                    className={`p-2 rounded cursor-pointer hover:bg-gray-50 ${
-                      selectedService === service ? 'bg-blue-50 border-blue-200' : ''
+                    className={`p-2 rounded cursor-pointer hover:bg-gray-50 border ${
+                      selectedService === service ? 'bg-blue-50 border-blue-200' : 'border-gray-200'
                     }`}
                   >
-                    <div className="font-medium text-sm">{service.Service}</div>
-                    <div className="text-xs text-gray-500">
-                      Base Cost: KSh {service["Base Cost (KES)"].toLocaleString()}
-                      {service["NHIF Covered"] === "Yes" ? " (NHIF Covered)" : " (Not NHIF Covered)"}
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="font-medium text-sm">{service.Service}</div>
+                        <div className="text-xs text-gray-500">
+                          Base Cost: KSh {service["Base Cost (KES)"].toLocaleString()}
+                          {service["NHIF Covered"] === "Yes" ? " (NHIF Covered)" : " (Not NHIF Covered)"}
+                        </div>
+                      </div>
+                      <div className="flex gap-1 ml-2">
+                        <button
+                          type="button"
+                          onClick={() => handleServiceSelect(service)}
+                          className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                          Select
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleServiceClick(service)}
+                          className="px-2 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600"
+                        >
+                          Info
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -278,6 +427,14 @@ const CostEstimator = () => {
           })}
         </div>
       </div>
+
+      {/* Service Modal */}
+      <ServiceModal 
+        service={modalService} 
+        isOpen={isModalOpen} 
+        onClose={closeModal}
+        onSelect={selectServiceFromModal}
+      />
     </div>
   );
 };

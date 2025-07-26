@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import treatmentCosts from "../data/treatment_costs.json";
+import { Button } from "@/components/ui/button";
 
 interface RiskAssessmentData {
   age: string;
@@ -40,12 +42,192 @@ const YES_NO_OPTIONS = [
   { label: 'No', value: 'n' }
 ];
 
+const REGION_OPTIONS = [
+  { label: 'Embu', value: 'embu' },
+  { label: 'Garissa', value: 'garissa' },
+  { label: 'Kakamega', value: 'kakamega' },
+  { label: 'Kericho', value: 'kericho' },
+  { label: 'Kitale', value: 'kitale' },
+  { label: 'Loitoktok', value: 'loitoktok' },
+  { label: 'Machakos', value: 'machakos' },
+  { label: 'Moi', value: 'moi' },
+  { label: 'Mombasa', value: 'mombasa' },
+  { label: 'Nakuru', value: 'nakuru' },
+  { label: 'Pumwani', value: 'pumwani' }
+];
+
+const SCREENING_TYPE_OPTIONS = [
+  { label: 'HPV DNA', value: 'hpv dna' },
+  { label: 'Pap Smear', value: 'pap smear' },
+  { label: 'VIA', value: 'via' }
+];
+
+// Modal component for detailed service information
+const ServiceModal = ({ service, isOpen, onClose }: { service: any; isOpen: boolean; onClose: () => void }) => {
+  if (!isOpen || !service) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Service Details</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+            >
+              ×
+            </button>
+          </div>
+          <div className="space-y-4">
+            {/* Service Header */}
+            <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">{service.Service}</h3>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Facility:</span> {service.Facility}
+              </div>
+              <div className="text-sm text-gray-600">
+                <span className="font-medium">Category:</span> {service.Category}
+              </div>
+            </div>
+            {/* Cost Breakdown */}
+            <div className="border rounded-lg p-4">
+              <h4 className="font-semibold mb-3 text-gray-800">Cost Breakdown</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm">Base Cost:</span>
+                  <span className="font-medium">KSh {service["Base Cost (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Insurance Copay:</span>
+                  <span className="font-medium">KSh {service["Insurance Copay (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm">Out-of-Pocket:</span>
+                  <span className="font-medium">KSh {service["Out-of-Pocket (KES)"].toLocaleString()}</span>
+                </div>
+                <div className="border-t pt-2 mt-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm font-medium">NHIF Coverage:</span>
+                    <span className={`font-medium ${service["NHIF Covered"] === "Yes" ? "text-green-600" : "text-red-600"}`}>{service["NHIF Covered"]}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Additional Information */}
+            <div className="border rounded-lg p-4">
+              <h4 className="font-semibold mb-3 text-gray-800">Additional Information</h4>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="font-medium">Service Type:</span> {service.Category}
+                </div>
+                <div>
+                  <span className="font-medium">Facility Region:</span> {service.Region || "N/A"}
+                </div>
+                <div>
+                  <span className="font-medium">Insurance Status:</span>
+                  <span className={`ml-1 ${service["NHIF Covered"] === "Yes" ? "text-green-600" : "text-orange-600"}`}>{service["NHIF Covered"] === "Yes" ? "Covered by NHIF" : "Not covered by NHIF"}</span>
+                </div>
+              </div>
+            </div>
+            {/* Recommendations */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="font-semibold mb-2 text-blue-800">Recommendations</h4>
+              <div className="text-sm text-blue-700 space-y-1">
+                {service["NHIF Covered"] === "Yes" ? (
+                  <div>✓ This service is covered by NHIF - you may be eligible for reduced costs</div>
+                ) : (
+                  <div>⚠ This service is not covered by NHIF - consider private insurance options</div>
+                )}
+                <div>✓ Contact the facility directly for appointment scheduling</div>
+                <div>✓ Bring your ID and insurance card (if applicable) to your appointment</div>
+              </div>
+            </div>
+          </div>
+          <div className="flex gap-3 mt-6">
+            <Button onClick={onClose} className="flex-1 bg-gray-500 hover:bg-gray-600 text-white">Close</Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const PatientRisk = () => {
   const [form, setForm] = useState<RiskAssessmentData>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RiskResult | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
+  const [modalService, setModalService] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Reset form to ensure clean state
+  const resetForm = () => {
+    setForm(initialForm);
+    setErrors({});
+    setResult(null);
+    setApiError(null);
+  };
+
+  // Reset form when component mounts
+  useEffect(() => {
+    resetForm();
+  }, []);
+
+  // Helper function to get cost estimates based on region and service
+  const getCostEstimates = (region: string, service: string) => {
+    const regionServices = treatmentCosts.filter(item => 
+      item.Region.toLowerCase().includes(region.toLowerCase()) && 
+      item.Service.toLowerCase().includes(service.toLowerCase())
+    );
+    
+    if (regionServices.length === 0) return null;
+    
+    const avgCost = regionServices.reduce((sum, item) => sum + item["Base Cost (KES)"], 0) / regionServices.length;
+    const minCost = Math.min(...regionServices.map(item => item["Base Cost (KES)"]));
+    const maxCost = Math.max(...regionServices.map(item => item["Base Cost (KES)"]));
+    
+    return {
+      average: avgCost,
+      range: `${minCost.toLocaleString()} - ${maxCost.toLocaleString()}`,
+      facilities: regionServices.map(item => item.Facility)
+    };
+  };
+
+  // Helper function to get risk level information
+  const getRiskLevelInfo = (level: string) => {
+    switch (level.toLowerCase()) {
+      case 'high':
+        return {
+          description: "You have a high risk of cervical cancer. Immediate medical attention is recommended.",
+          urgency: "Immediate action required",
+          followUp: "3-6 months",
+          services: ["Colposcopy", "Biopsy", "Specialist consultation"]
+        };
+      case 'medium':
+        return {
+          description: "You have a moderate risk of cervical cancer. Regular monitoring is important.",
+          urgency: "Action recommended",
+          followUp: "6-12 months",
+          services: ["Pap Smear", "HPV Test", "Follow-up consultation"]
+        };
+      case 'low':
+        return {
+          description: "You have a low risk of cervical cancer. Continue with regular screening.",
+          urgency: "Regular monitoring",
+          followUp: "1-3 years",
+          services: ["Regular Pap Smear", "HPV Test"]
+        };
+      default:
+        return {
+          description: "Risk assessment completed. Follow medical recommendations.",
+          urgency: "Follow recommendations",
+          followUp: "As recommended",
+          services: ["Consult healthcare provider"]
+        };
+    }
+  };
 
   const validate = (): boolean => {
     const errs: Record<string, string> = {};
@@ -58,8 +240,14 @@ const PatientRisk = () => {
     if (!form.region) errs.region = "Region is required";
     if (!form.insurance) errs.insurance = "Insurance status is required";
     if (!form.screening) errs.screening = "Last screening type is required";
-    // Optional: partners, firstSex
+    if (!form.partners) errs.partners = "Number of sexual partners is required";
+    if (!form.firstSex) errs.firstSex = "First sexual activity age is required";
+    // Logical check: first sexual activity age cannot be greater than age
     const age = parseInt(form.age);
+    const firstSex = parseInt(form.firstSex);
+    if (form.firstSex && form.age && firstSex > age) {
+      errs.firstSex = "First sexual activity age cannot be greater than your current age";
+    }
     if (age && (age < 18 || age > 100)) {
       errs.age = "Age must be between 18 and 100";
     }
@@ -70,7 +258,6 @@ const PatientRisk = () => {
       }
     }
     if (form.firstSex) {
-      const firstSex = parseInt(form.firstSex);
       if (firstSex < 0) {
         errs.firstSex = "First sexual activity age cannot be negative";
       }
@@ -94,30 +281,113 @@ const PatientRisk = () => {
     setApiError(null);
     if (!validate()) return;
     setLoading(true);
-    // Backend/API logic removed for frontend-only version
-    setTimeout(() => {
-      setResult({
-        risk_level: "High",
-        risk_score: 95,
-        factors: [
-          "Age over 35 years",
-          "Multiple sexual partners",
-          "HPV positive",
-          "Smoking history",
-          "History of STDs",
-          "No insurance coverage - may affect access to care",
-        ],
-        recommendations: [
-          "Immediate colposcopy recommended",
-          "Follow-up in 3-6 months",
-          "Consider specialist referral",
-          "Lifestyle counseling and smoking cessation if applicable",
-          "Partner notification and testing",
-        ],
-        next_screening_date: "3-6 months",
+
+    try {
+      // Prepare the request payload according to API specification
+      const payload = {
+        age: parseInt(form.age),
+        first_sexual_activity_age: form.firstSex || null,
+        hpv_test_result: form.hpv,
+        insurance_covered: form.insurance,
+        pap_smear_result: form.pap,
+        region: form.region,
+        screening_type_last: form.screening,
+        sexual_partners: form.partners || null,
+        smoking_status: form.smoking,
+        stds_history: form.stds
+      };
+
+      // Validate required fields
+      if (!payload.age || payload.age < 18 || payload.age > 100) {
+        throw new Error("Age must be between 18 and 100");
+      }
+      
+      if (!payload.hpv_test_result) {
+        throw new Error("HPV test result is required");
+      }
+      
+      if (!payload.region) {
+        throw new Error("Region is required");
+      }
+      
+      if (!payload.screening_type_last) {
+        throw new Error("Last screening type is required");
+      }
+
+      // Log the payload being sent to backend
+      console.log("🚀 Sending payload to backend:", payload);
+      console.log("🔍 Form HPV value:", form.hpv);
+      console.log("🔍 Payload HPV value:", payload.hpv_test_result);
+
+      // Get token from localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setApiError('You must be logged in to assess risk.');
+        setLoading(false);
+        return;
+      }
+
+      console.log("🔑 Using token:", token.substring(0, 20) + "...");
+
+      // Make API call to the backend
+      const response = await fetch("https://tumaini.astralyngroup.com/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       });
+
+      console.log("📡 Response status:", response.status);
+      console.log("📡 Response headers:", Object.fromEntries(response.headers.entries()));
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.log("❌ Error response:", errorData);
+        
+        // Handle different error response formats
+        let errorMessage = `HTTP error! status: ${response.status}`;
+        
+        if (errorData.detail) {
+          if (Array.isArray(errorData.detail)) {
+            // Handle validation errors array
+            errorMessage = errorData.detail.map((err: any) => 
+              `${err.loc?.join('.') || 'Field'}: ${err.msg || err.message || 'Invalid value'}`
+            ).join(', ');
+          } else {
+            errorMessage = errorData.detail;
+          }
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        } else if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+      console.log("✅ Success response from backend:", responseData);
+      
+      // Extract data from the nested structure
+      const data = responseData.data;
+      
+      // Transform API response to match our UI expectations
+      setResult({
+        risk_level: data.risk_level || "Unknown",
+        risk_score: data.risk_score || 0,
+        factors: data.notes || [],
+        recommendations: [data.recommended_action] || [],
+        next_screening_date: data.recommended_action ? "Immediate follow-up recommended" : "To be determined",
+      });
+      
+    } catch (error) {
+      console.error("Risk assessment error:", error);
+      setApiError(error instanceof Error ? error.message : "Failed to assess risk. Please try again.");
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
   };
 
   const getRiskLevelColor = (level: string) => {
@@ -163,7 +433,7 @@ const PatientRisk = () => {
               {errors.age && <div className="text-xs text-red-500 mt-1">{errors.age}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">Number of Sexual Partners <span className="text-gray-400">(optional)</span></label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Number of Sexual Partners *</label>
               <input 
                 name="partners" 
                 value={form.partners} 
@@ -171,12 +441,12 @@ const PatientRisk = () => {
                 type="number" 
                 className={`w-full border border-gray-300 rounded-lg px-3 py-2 input-animate text-sm ${errors.partners ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
                 min="0"
-                placeholder="Leave blank if N/A"
+                placeholder="Enter number of partners"
               />
               {errors.partners && <div className="text-xs text-red-500 mt-1">{errors.partners}</div>}
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2 text-gray-700">First Sexual Activity Age <span className="text-gray-400">(optional)</span></label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">First Sexual Activity Age *</label>
               <input 
                 name="firstSex" 
                 value={form.firstSex} 
@@ -184,7 +454,7 @@ const PatientRisk = () => {
                 type="number" 
                 className={`w-full border border-gray-300 rounded-lg px-3 py-2 input-animate text-sm ${errors.firstSex ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
                 min="0"
-                placeholder="Leave blank if N/A"
+                placeholder="Enter age at first sexual activity"
               />
               {errors.firstSex && <div className="text-xs text-red-500 mt-1">{errors.firstSex}</div>}
             </div>
@@ -197,9 +467,8 @@ const PatientRisk = () => {
                 className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.hpv ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
                 <option value="">Select HPV Test Result</option>
-                <option value="Positive">Positive</option>
-                <option value="Negative">Negative</option>
-                <option value="Unknown">Unknown</option>
+                <option value="positive">Positive</option>
+                <option value="negative">Negative</option>
               </select>
               {errors.hpv && <div className="text-xs text-red-500 mt-1">{errors.hpv}</div>}
             </div>
@@ -257,12 +526,9 @@ const PatientRisk = () => {
                 className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.region ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
                 <option value="">Select Region</option>
-                <option value="Nairobi">Nairobi</option>
-                <option value="Mombasa">Mombasa</option>
-                <option value="Kisumu">Kisumu</option>
-                <option value="Nakuru">Nakuru</option>
-                <option value="Eldoret">Eldoret</option>
-                <option value="Other">Other</option>
+                {REGION_OPTIONS.map(opt => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
               </select>
               {errors.region && <div className="text-xs text-red-500 mt-1">{errors.region}</div>}
             </div>
@@ -282,15 +548,15 @@ const PatientRisk = () => {
               {errors.insurance && <div className="text-xs text-red-500 mt-1">{errors.insurance}</div>}
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium mb-2 text-gray-700">Previous Screening *</label>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Last Screening Type *</label>
               <select
                 name="screening"
                 value={form.screening}
                 onChange={handleChange}
                 className={`w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white ${errors.screening ? 'border-red-500 focus:ring-red-300' : 'focus:ring-pink-300 focus:border-pink-300'}`}
               >
-                <option value="">Select Previous Screening</option>
-                {YES_NO_OPTIONS.map(opt => (
+                <option value="">Select Last Screening Type</option>
+                {SCREENING_TYPE_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
@@ -298,20 +564,30 @@ const PatientRisk = () => {
             </div>
           </div>
           
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm"
-          >
-            {loading ? (
-              <div className="flex items-center justify-center">
-                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                Assessing Risk...
-              </div>
-            ) : (
-              "Assess My Risk"
-            )}
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 bg-gradient-to-r from-pink-500 to-purple-500 text-white py-3 px-6 rounded-lg font-medium hover:from-pink-600 hover:to-purple-600 focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none text-sm"
+            >
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Assessing Risk...
+                </div>
+              ) : (
+                "Assess My Risk"
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={resetForm}
+              disabled={loading}
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            >
+              Reset Form
+            </button>
+          </div>
         </form>
 
         {/* Results Section */}
@@ -333,44 +609,185 @@ const PatientRisk = () => {
           )}
           
           {result && (
-            <div className="space-y-4">
-              <div className="text-center p-4 rounded-lg bg-gray-50">
-                <div className="text-2xl font-bold mb-2">Risk Level: <span className={getRiskLevelColor(result.risk_level)}>{result.risk_level}</span></div>
-                <div className="text-sm text-gray-600">Risk Score: {result.risk_score}/100</div>
-              </div>
+            <div className="space-y-6">
+              {/* Risk Level Summary */}
+              {(() => {
+                const riskInfo = getRiskLevelInfo(result.risk_level);
+                return (
+                  <div className="text-center p-6 rounded-lg bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200">
+                    <div className="text-3xl font-bold mb-3">
+                      Risk Level: <span className={getRiskLevelColor(result.risk_level)}>{result.risk_level.toUpperCase()}</span>
+                    </div>
+                    <div className="text-sm text-gray-700 mb-3">{riskInfo.description}</div>
+                    <div className="inline-block px-4 py-2 bg-pink-100 text-pink-800 rounded-full text-sm font-medium">
+                      {riskInfo.urgency}
+                    </div>
+                  </div>
+                );
+              })()}
               
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">Key Risk Factors:</h3>
-                <ul className="space-y-1">
-                  {result.factors.map((factor, index) => (
-                    <li key={index} className="text-sm text-gray-600 flex items-start">
-                      <span className="text-red-500 mr-2">•</span>
-                      {factor}
-                    </li>
-                  ))}
-                </ul>
+              {/* Detailed Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Recommendations */}
+                <div className="bg-white border rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <span className="text-green-500 mr-2">✓</span>
+                    Recommendations
+                  </h3>
+                  <ul className="space-y-2">
+                    {result.recommendations.map((rec, index) => (
+                      <li key={index} className="text-sm text-gray-700 flex items-start">
+                        <span className="text-green-500 mr-2 mt-1">•</span>
+                        {rec}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Follow-up Schedule */}
+                <div className="bg-white border rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <span className="text-blue-500 mr-2">📅</span>
+                    Follow-up Schedule
+                  </h3>
+                  <div className="space-y-2">
+                    <div className="text-sm">
+                      <span className="font-medium text-gray-700">Next Follow-up:</span>
+                      <span className="text-blue-600 ml-2">{getRiskLevelInfo(result.risk_level).followUp}</span>
+                    </div>
+                    <div className="text-sm">
+                      <span className="font-medium text-gray-700">Recommended Services:</span>
+                      <ul className="mt-1 space-y-1">
+                        {getRiskLevelInfo(result.risk_level).services.map((service, index) => (
+                          <li key={index} className="text-blue-600 text-xs ml-4">• {service}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               </div>
-              
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2 text-sm">Recommendations:</h3>
-                <ul className="space-y-1">
-                  {result.recommendations.map((rec, index) => (
-                    <li key={index} className="text-sm text-gray-600 flex items-start">
-                      <span className="text-green-500 mr-2">✓</span>
-                      {rec}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <div className="text-sm font-medium text-blue-900 mb-1">Next Screening Date:</div>
-                <div className="text-sm text-blue-700">{result.next_screening_date}</div>
-              </div>
+
+              {/* Cost Estimation and Location-based Services */}
+              {form.region && (() => {
+                const costEstimates = getCostEstimates(form.region, "colposcopy");
+                const papSmearCosts = getCostEstimates(form.region, "pap smear");
+                const hpvCosts = getCostEstimates(form.region, "hpv");
+                // Helper to get a sample service for modal info
+                const getSampleService = (region: string, service: string) => {
+                  return treatmentCosts.find(item =>
+                    item.Region.toLowerCase().includes(region.toLowerCase()) &&
+                    item.Service.toLowerCase().includes(service.toLowerCase())
+                  );
+                };
+                return (
+                  <div className="bg-white border rounded-lg p-4">
+                    <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                      <span className="text-purple-500 mr-2">💰</span>
+                      Cost Estimates & Available Services in {form.region.charAt(0).toUpperCase() + form.region.slice(1)}
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Colposcopy Costs */}
+                      {costEstimates && (
+                        <div className="bg-purple-50 rounded-lg p-3 relative">
+                          <div className="font-medium text-purple-800 text-sm mb-1">Colposcopy</div>
+                          <div className="text-lg font-bold text-purple-900">KSh {costEstimates.range}</div>
+                          <div className="text-xs text-purple-600 mt-1">
+                            Available at {costEstimates.facilities.length} facility(ies)
+                          </div>
+                          <button
+                            className="absolute top-2 right-2 text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-1"
+                            onClick={() => {
+                              setModalService(getSampleService(form.region, "colposcopy"));
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            Info
+                          </button>
+                        </div>
+                      )}
+                      
+                      {/* Pap Smear Costs */}
+                      {papSmearCosts && (
+                        <div className="bg-blue-50 rounded-lg p-3 relative">
+                          <div className="font-medium text-blue-800 text-sm mb-1">Pap Smear</div>
+                          <div className="text-lg font-bold text-blue-900">KSh {papSmearCosts.range}</div>
+                          <div className="text-xs text-blue-600 mt-1">
+                            Available at {papSmearCosts.facilities.length} facility(ies)
+                          </div>
+                          <button
+                            className="absolute top-2 right-2 text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-1"
+                            onClick={() => {
+                              setModalService(getSampleService(form.region, "pap smear"));
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            Info
+                          </button>
+                        </div>
+                      )}
+                      
+                      {/* HPV Test Costs */}
+                      {hpvCosts && (
+                        <div className="bg-green-50 rounded-lg p-3 relative">
+                          <div className="font-medium text-green-800 text-sm mb-1">HPV Test</div>
+                          <div className="text-lg font-bold text-green-900">KSh {hpvCosts.range}</div>
+                          <div className="text-xs text-green-600 mt-1">
+                            Available at {hpvCosts.facilities.length} facility(ies)
+                          </div>
+                          <button
+                            className="absolute top-2 right-2 text-xs bg-gray-200 hover:bg-gray-300 rounded px-2 py-1"
+                            onClick={() => {
+                              setModalService(getSampleService(form.region, "hpv"));
+                              setIsModalOpen(true);
+                            }}
+                          >
+                            Info
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Insurance Information */}
+                    <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
+                      <div className="text-sm">
+                        <span className="font-medium text-yellow-800">Insurance Status:</span>
+                        <span className={`ml-2 ${form.insurance === 'y' ? 'text-green-600' : 'text-red-600'}`}>
+                          {form.insurance === 'y' ? 'Covered' : 'Not Covered'}
+                        </span>
+                      </div>
+                      {form.insurance === 'n' && (
+                        <div className="text-xs text-yellow-700 mt-1">
+                          Consider NHIF coverage for reduced costs
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Risk Factors */}
+              {result.factors.length > 0 && (
+                <div className="bg-white border rounded-lg p-4">
+                  <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+                    <span className="text-red-500 mr-2">⚠️</span>
+                    Risk Factors Identified
+                  </h3>
+                  <ul className="space-y-2">
+                    {result.factors.map((factor, index) => (
+                      <li key={index} className="text-sm text-gray-700 flex items-start">
+                        <span className="text-red-500 mr-2 mt-1">•</span>
+                        {factor}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>
       </div>
+      {/* Modal for service info */}
+      <ServiceModal service={modalService} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };
